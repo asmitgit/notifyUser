@@ -1,0 +1,206 @@
+
+<html>
+<head>
+        <link href="content/css/style.css" rel="stylesheet" />
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,100,300,700' rel='stylesheet' type='text/css' />
+
+</head>
+<body>
+    <div >    <span class="notification_no" id="spCount" onclick="openList()">0</span>
+    <div id="mainDiv">
+        <div class="notification_list"></div>
+    <div class="notification_container">
+        <ul class="notification_data" id="listData" >
+            
+                <!-- <li>
+                    <div class="notification_hd">
+                        <span>PB12324123</span> <span>12 May 18 12:15 PM</span>
+                    </div>
+                    <p>Customer has responded</p>
+
+                    <em>X</em>
+                </li>
+                <li>
+                        <div class="notification_hd">
+                            <span>PB12324123</span> <span>12 May 18 12:15 PM</span>
+                        </div>
+                        <p>Customer has responded</p>
+                    </li> -->
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script src="../node_modules/moment/moment.js"></script>
+<script>
+    var _PageLoad=0;
+    function getUrlVars()
+    {
+        try{
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    catch(err){}
+
+    }
+    (function(){
+        var element = function(id){
+            return document.getElementById(id);
+        }
+
+        // Get Elements
+        var status = element('listData');
+        var  spCount= element('spCount');
+        
+
+        // Connect to socket.io
+        var socket = io.connect('http://10.0.11.69:4000');
+//alert(getUrlVars()["eid"]);
+        socket.emit('GetMyData',  {
+                        eid:getUrlVars()["eid"]
+                    },function(data){
+                
+            });
+
+        // Check for connection
+        socket.on('output', function(data){
+            var _count=0;
+            
+                
+                if(data.length>0){
+                   
+                   
+                    for(var x = 0;x < data.length;x++){
+                        // Build out message div
+                      
+                        if( data[x].uid == getUrlVars()["eid"] ){
+                            _count=_count+1;
+                            //parent.OpenNotification(_count);
+                        
+                        var dateTime = new Date(data[x].cd);
+                        //dateTime = moment(dateTime).calendar();
+                        dateTime = moment(dateTime).fromNow();
+
+                        var childdata = '<li id="'+data[x]._id+'">    <div class="notification_hd">    <span>'
+                            +data[x].entID+'</span> <span>' 
+                        + dateTime + '</span> </div>  <p>'+data[x].msg+'</p>'+
+                        '<a href="javascript:void(0);" class="open_tkt">Click to open</a>'+
+                        '<a  href="javascript:void(0);" class="close_tkt" onclick="MarkRead(\''+data[x]._id+'\');">X</a> </li>';
+                        status.innerHTML=childdata+status.innerHTML;
+                        var _div= document.getElementById('mainDiv');
+                        if (_div.style.display === "none") {
+                          _div.style.display = "block";
+                         }
+                        // message.innerHTML ="<div id='"+data[x]._id+"'>" 
+                        //     //+data[x].ts+"</div>" 
+                        //     +"Inbound Ticket<span>" +dateTime+"</span> </div>" 
+                        //     // +"<div>" 
+                        //     // //+data[x].ts+"</div>" 
+                        //     // +"Inbound Ticket </div>" 
+                        //     +"<div><a href='javascript:void(0)' id='"+
+                        //         data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id +"' onclick='OpenTicket(this)'>"
+                        //         +data[x].ticketid
+                        //         +"</a>  <b id='"
+                        //         +data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id 
+                        //         +"' onclick='MarkAsRead(this);'>x</b></div>";//+": "+data[x].message;
+                        // messages.appendChild(message);
+                        // messages.insertBefore(message, messages.firstChild);
+                        
+                        }
+                    }
+                    var _curCount=parseInt(spCount.innerHTML);
+                    spCount.innerHTML=parseInt(parseInt(_count)+parseInt(spCount.innerHTML));
+                    if(_PageLoad==0){
+                        _PageLoad=_PageLoad+1;
+                    }
+                    else{
+                        if(_count>0){
+                            var obj = {
+                                        msg: "NewTicket",
+                                        paramters: _count 
+                                } ;
+                                window.parent.postMessage(obj, "*");
+                        }
+                    }
+                }
+                else{
+                    var _div= document.getElementById('mainDiv');
+                    _div.style.display = "none";
+                }
+            });
+
+    })();
+    
+    function openList(){
+       var _div= document.getElementById('mainDiv');
+       if (_div.style.display === "none") {
+            _div.style.display = "block";
+        } else {
+            _div.style.display = "none";
+        }
+    }
+    function MarkRead(elem){
+    //alert(elem);           
+        try{
+            var _objID=elem;
+                $.ajax({
+                        url: "http://10.0.11.69:8080/api/MarkTicketAsRead",
+                        type: "POST",
+                        data: {
+                                _id:_objID,
+                                uby:getUrlVars()["eid"] 
+                            },
+                        dataType: "json",
+                        success: function (result) {
+                            var _div= document.getElementById(_objID);
+                            _div.outerHTML = "";
+                            spCount.innerHTML=parseInt(parseInt(spCount.innerHTML)-1);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            //alert(xhr.status);
+                            //alert(thrownError);
+                        }
+                    });
+        }
+        catch(err){}
+    }
+
+    function OpenTicket(elem){
+        try{
+            var _objID=elem.id.split('/')[2];
+                $.ajax({
+                        url: "http://10.34.83.17:8080/api/MarkTicketAsRead",
+                        type: "POST",
+                        data: {
+                                _id:_objID
+                            },
+                        dataType: "json",
+                        success: function (result) {
+                            //var _div= document.getElementById(elem.id.split('/')[2]);
+                            //_div.outerHTML = "";
+                            var _url="http://tickets.policybazaar.com/home.html#/TicketSystem/Notification/" + elem.id.split('/')[0] + "/"+elem.id.split('/')[1];
+                            window.parent.location.href= _url;
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            //alert(xhr.status);
+                            //alert(thrownError);
+                        }
+                    });
+        }
+        catch(err){}
+    }
+   
+</script>
+</html>
