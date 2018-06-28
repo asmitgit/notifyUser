@@ -87,7 +87,7 @@
             }
 
             // Connect to socket.io
-            var socket = io.connect('http://localhost:4000');
+            var socket = io.connect('http://10.80.10.140:4000');
 //alert(getUrlVars()["eid"]);
             socket.emit('GetMyData',  {
                             eid:getUrlVars()["eid"]
