@@ -96,7 +96,7 @@ crossorigin="anonymous"></script>
                         var childdata = '<li id="'+data[x]._id+'">    <div class="notification_hd">    <span>'
                             +data[x].entID+'</span> <span>' 
                         + dateTime + '</span> </div>  <p>'+data[x].msg+'</p>'+
-                        '<a href="javascript:void(0);" class="open_tkt">Click to open</a>'+
+                        '<a href="javascript:void(0);" class="open_tkt" onclick="OpenDetailPage(\''+data[x].url+'\',\''+data[x]._id+'\');">Click to open</a>'+
                         '<a  href="javascript:void(0);" class="close_tkt" onclick="MarkRead(\''+data[x]._id+'\');">X</a> </li>';
                         status.innerHTML=childdata+status.innerHTML;
                         var _div= document.getElementById('mainDiv');
@@ -177,20 +177,20 @@ crossorigin="anonymous"></script>
         catch(err){}
     }
 
-    function OpenTicket(elem){
+    function OpenDetailPage(url,id){
         try{
-            var _objID=elem.id.split('/')[2];
+           
                 $.ajax({
                         url: "http://10.80.10.140:8080//api/MarkTicketAsRead",
                         type: "POST",
                         data: {
-                                _id:_objID
+                                _id:id
                             },
                         dataType: "json",
                         success: function (result) {
                             //var _div= document.getElementById(elem.id.split('/')[2]);
                             //_div.outerHTML = "";
-                            var _url="http://tickets.policybazaar.com/home.html#/TicketSystem/Notification/" + elem.id.split('/')[0] + "/"+elem.id.split('/')[1];
+                            var _url=url;
                             window.parent.location.href= _url;
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
