@@ -66,7 +66,7 @@ crossorigin="anonymous"></script>
         
 
         // Connect to socket.io
-        var socket = io.connect('http://10.0.11.69:4000');
+        var socket = io.connect('notificationsocket.policybazaar.com');
 //alert(getUrlVars()["eid"]);
         socket.emit('GetMyData',  {
                         eid:getUrlVars()["eid"]
@@ -156,7 +156,7 @@ crossorigin="anonymous"></script>
         try{
             var _objID=elem;
                 $.ajax({
-                        url: "http://10.0.11.69:8080/api/MarkTicketAsRead",
+                        url: "http://notification.policybazaar.com/api/MarkTicketAsRead",
                         type: "POST",
                         data: {
                                 _id:_objID,
@@ -181,7 +181,7 @@ crossorigin="anonymous"></script>
         try{
             var _objID=elem.id.split('/')[2];
                 $.ajax({
-                        url: "http://10.34.83.17:8080/api/MarkTicketAsRead",
+                        url: "http://notification.policybazaar.com/api/MarkTicketAsRead",
                         type: "POST",
                         data: {
                                 _id:_objID
