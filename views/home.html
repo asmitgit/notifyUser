@@ -138,6 +138,12 @@ crossorigin="anonymous"></script>
                 else{
                     var _div= document.getElementById('mainDiv');
                     _div.style.display = "none";
+                    var obj = {
+                    msg: "NewTicket",
+                    paramters: 2 
+                                    } ;
+
+        window.parent.postMessage(obj, "*");
                 }
             });
 
