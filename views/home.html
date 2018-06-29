@@ -147,9 +147,23 @@ crossorigin="anonymous"></script>
        var _div= document.getElementById('mainDiv');
        if (_div.style.display === "none") {
             _div.style.display = "block";
+            var obj = {
+                    msg: "NewTicket",
+                    paramters: 1 
+                                    } ;
+
+        window.parent.postMessage(obj, "*");
         } else {
             _div.style.display = "none";
+            var obj = {
+                    msg: "NewTicket",
+                    paramters: 2 
+                                    } ;
+
+        window.parent.postMessage(obj, "*");
         }
+
+       
     }
     function MarkRead(elem){
     //alert(elem);           
