@@ -81,7 +81,7 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
             //let name = data.UserID;          
             console.log(data);
             var _date=new Date();
-            _date.setDate(_date.getMinutes()-30);
+            _date.setDate(_date.getMinutes()-120);
            // _date = parseString(_date);
             var _strDate=_date.toString();
             // ,ts:{$gt:_strDate}
