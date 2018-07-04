@@ -109,7 +109,7 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
             // );
             try{
                 //console.log(data._id);  
-            chat.update({ '_id' : ObjectID(data._id) },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby  }},function(err, res){
+            chat.update({ '_id' : data._id },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby  }},function(err, res){
                 if(err){
                     console.log(res);
                 }
@@ -167,7 +167,7 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
                     //  element.ld= new Date();
                     //  element.uby= 0;
                     console.log(req.body._id);  
-                chat.update({ '_id' : ObjectID(req.body._id) },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby }},function(err, res){
+                chat.update({ '_id' : req.body._id },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby }},function(err, res){
                     if(err){
                         console.log(res);
                     }
