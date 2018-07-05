@@ -88,7 +88,10 @@ crossorigin="anonymous"></script>
                         if( data[x].uid == getUrlVars()["eid"] ){
                             _count=_count+1;
                             //parent.OpenNotification(_count);
-                        
+                        var _OpenLink="";
+                        if(data[x].url!='' || data[x].url==null){
+                            _OpenLink='<a href="javascript:void(0);" class="open_tkt" onclick="OpenDetailPage(\''+data[x].url+'\',\''+data[x]._id+'\');">Click to open</a>'
+                        }
                         var dateTime = new Date(data[x].cd);
                         //dateTime = moment(dateTime).calendar();
                         dateTime = moment(dateTime).fromNow();
@@ -96,7 +99,7 @@ crossorigin="anonymous"></script>
                         var childdata = '<li id="'+data[x]._id+'">    <div class="notification_hd">    <span>'
                             +data[x].entID+'</span> <span>' 
                         + dateTime + '</span> </div>  <p>'+data[x].msg+'</p>'+
-                        '<a href="javascript:void(0);" class="open_tkt" onclick="OpenDetailPage(\''+data[x].url+'\',\''+data[x]._id+'\');">Click to open</a>'+
+                        _OpenLink+
                         '<a  href="javascript:void(0);" class="close_tkt" onclick="MarkRead(\''+data[x]._id+'\');">X</a> </li>';
                         status.innerHTML=childdata+status.innerHTML;
                         var _div= document.getElementById('mainDiv');
