@@ -93,8 +93,8 @@ crossorigin="anonymous"></script>
                             _OpenLink='<a href="javascript:void(0);" class="open_tkt" onclick="OpenDetailPage(\''+data[x].url+'\',\''+data[x]._id+'\');">Click to open</a>'
                         }
                         var dateTime = new Date(data[x].cd);
-                        //dateTime = moment(dateTime).calendar();
-                        dateTime = moment(dateTime).fromNow();
+                        dateTime = moment(dateTime).calendar();
+                        //dateTime = moment(dateTime).fromNow();
 
                         var childdata = '<li id="'+data[x]._id+'">    <div class="notification_hd">    <span>'
                             +data[x].entID+'</span> <span>' 
