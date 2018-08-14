@@ -53,7 +53,7 @@ app.get('/home1', function(req,res){
 
 
 // Connect to mongo
-mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/database=TicketSystem?authSource=TicketSystem;readPreference=secondaryPreferred;connectTimeoutms=40000&amp;socketTimeoutMS=40000;replicaSet=rs3', function(err, db){
+mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/?authSource=TicketSystem;readPreference=secondaryPreferred;connectTimeoutms=40000&amp;socketTimeoutMS=40000;replicaSet=rs3', function(err, db){
     if(err){
         throw err;
     }
@@ -127,7 +127,7 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
     // create a bear (accessed at POST http://10.0.11.69:8080/AddTicketNotification)
     .post(function(req, res) {
         console.log('hello');
-        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/database=TicketSystem?authSource=TicketSystem;readPreference=secondaryPreferred;connectTimeoutms=40000&amp;socketTimeoutMS=40000;replicaSet=rs3', function(err, db){
+        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/?authSource=TicketSystem;readPreference=secondaryPreferred;connectTimeoutms=40000&amp;socketTimeoutMS=40000;replicaSet=rs3', function(err, db){
             console.log('hello1');
             // Connect to Socket.io
             console.log(client);
@@ -159,7 +159,7 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
     router.route('/GetAllDataByUserID')
     // create a bear (accessed at POST http://10.0.11.69:8080/AddTicketNotification)
     .post(function(req, res) {        
-        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/database=TicketSystem?authSource=TicketSystem;readPreference=secondaryPreferred;connectTimeoutms=40000&amp;socketTimeoutMS=40000;replicaSet=rs3', function(err, db){
+        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/?authSource=TicketSystem;readPreference=secondaryPreferred;connectTimeoutms=40000&amp;socketTimeoutMS=40000;replicaSet=rs3', function(err, db){
                    
               
                 var chat = db.collection('Notification');
@@ -180,7 +180,7 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
     // create a bear (accessed at POST http://10.0.11.69:8080/api/bears)
     .post(function(req, res) {
         console.log('MarkTicketAsRead');
-        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/database=TicketSystem?authSource=TicketSystem;readPreference=secondaryPreferred;connectTimeoutms=40000&amp;socketTimeoutMS=40000;replicaSet=rs3', function(err, db){           
+        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/?authSource=TicketSystem;readPreference=secondaryPreferred;connectTimeoutms=40000&amp;socketTimeoutMS=40000;replicaSet=rs3', function(err, db){           
                 var chat = db.collection('Notification');               
                 console.log(req.body);
                 try{
