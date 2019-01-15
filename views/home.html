@@ -3,10 +3,10 @@
 <head>
         <link href="content/css/style.css" rel="stylesheet" />
         <link href='http://fonts.googleapis.com/css?family=Lato:400,100,300,700' rel='stylesheet' type='text/css' />
-
+        <link href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 </head>
 <body>
-    <div >    <span class="notification_no" id="spCount" onclick="openList()">0</span>
+    <div >  <i class="fa fa-bell-o" aria-hidden="true" style=" position: absolute; right: 33px; top: 14px;" onclick="openList()"></i>  <span class="notification_no" id="spCount" onclick="openList()">0</span>
     <div id="mainDiv">
         <div class="notification_list"></div>
     <div class="notification_container">
@@ -189,7 +189,15 @@ crossorigin="anonymous"></script>
                         success: function (result) {
                             var _div= document.getElementById(_objID);
                             _div.outerHTML = "";
+                            var obj = {
+                                        msg: "NewTicket",
+                                        paramters: parseInt(parseInt(spCount.innerHTML)-1) 
+                                } ;
+                                window.parent.postMessage(obj, "*");
+
                             spCount.innerHTML=parseInt(parseInt(spCount.innerHTML)-1);
+
+                           
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             //alert(xhr.status);
@@ -202,7 +210,7 @@ crossorigin="anonymous"></script>
 
     function OpenDetailPage(url,id){
         try{
-           
+            var _objID=id;
                 $.ajax({
                         url: "http://notification.policybazaar.com:8080/api/MarkTicketAsRead",
                         type: "POST",
@@ -215,6 +223,16 @@ crossorigin="anonymous"></script>
                             //_div.outerHTML = "";
                             var _url=url;
                             window.parent.location.href= _url;
+
+                             var _div= document.getElementById(_objID);
+                            _div.outerHTML = "";
+                            var obj = {
+                                        msg: "NewTicket",
+                                        paramters: parseInt(parseInt(spCount.innerHTML)-1) 
+                                } ;
+                                window.parent.postMessage(obj, "*");
+                                
+                            spCount.innerHTML=parseInt(parseInt(spCount.innerHTML)-1);
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             //alert(xhr.status);
