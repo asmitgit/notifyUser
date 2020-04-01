@@ -43,6 +43,12 @@ app.get('/home', function(req,res){
     //res.sendFile('index.html', {root : __dirname });
 });
 
+
+app.get('/flashmsg', function(req,res){
+    console.log('flashmsg');    
+    res.render('flashmsg.html');  
+    //res.sendFile('index.html', {root : __dirname });
+});
 app.get('/home1', function(req,res){
     console.log('home1');
     res.render('home.html');
