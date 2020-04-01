@@ -127,7 +127,7 @@ crossorigin="anonymous"></script>
         try{
             
                 $.ajax({
-                        url: "http://localhost:8080/api/MarkRead",
+                        url: "https://notification.policybazaar.com/api/MarkRead",
                         type: "POST",
                         data: {
                                 _id:_objID,
@@ -150,40 +150,7 @@ crossorigin="anonymous"></script>
         catch(err){}
     }
 
-    function OpenDetailPage(url,id){
-        try{
-            var _objID=id;
-                $.ajax({
-                        url: "http://notification.policybazaar.com:8080/api/MarkTicketAsRead",
-                        type: "POST",
-                        data: {
-                                _id:id
-                            },
-                        dataType: "json",
-                        success: function (result) {
-                            //var _div= document.getElementById(elem.id.split('/')[2]);
-                            //_div.outerHTML = "";
-                            var _url=url;
-                            window.parent.location.href= _url;
-
-                             var _div= document.getElementById(_objID);
-                            _div.outerHTML = "";
-                            var obj = {
-                                        msg: "NewTicket",
-                                        paramters: parseInt(parseInt(spCount.innerHTML)-1) 
-                                } ;
-                                window.parent.postMessage(obj, "*");
-                                
-                            spCount.innerHTML=parseInt(parseInt(spCount.innerHTML)-1);
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            //alert(xhr.status);
-                            //alert(thrownError);
-                        }
-                    });
-        }
-        catch(err){}
-    }
+  
    
 </script>
 </html>
