@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.engine('html', require('ejs').renderFile);
 
 app.set('views', __dirname + '/views');
-var port = process.env.PORT || 80;        // set our port
+var port = process.env.PORT || 8080;        // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
