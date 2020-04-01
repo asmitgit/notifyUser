@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "body-parser": "~1.0.1",
+    "cors": "^2.8.5",
     "ejs": "^2.6.1",
     "express": "~4.0.0",
     "moment": "^2.19.1",

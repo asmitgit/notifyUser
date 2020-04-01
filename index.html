@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <title>Notification</title>
-    <style>       
+    <style>
         .chat-message{display: table; width: 100%;}
         .chat-message.active_row{background: #f1f4f7;}
         .hide{display: none !important}
@@ -21,16 +20,16 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 offset-md-3 col-sm-12">
-                
+
                 <div id="status"></div>
                 <div id="chat">
-                   
+
                     <div class="card">
                         <div id="messages">
 
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -109,17 +108,17 @@
                             message.setAttribute('class', 'chat-message');
                             var dateTime = new Date(data[x].ts);
                             dateTime = moment(dateTime).calendar();
-                            message.innerHTML ="<div id='"+data[x]._id+"'>" 
-                                //+data[x].ts+"</div>" 
-                                +"Inbound Ticket<span>" +dateTime+"</span> </div>" 
-                                // +"<div>" 
-                                // //+data[x].ts+"</div>" 
-                                // +"Inbound Ticket </div>" 
+                            message.innerHTML ="<div id='"+data[x]._id+"'>"
+                                //+data[x].ts+"</div>"
+                                +"Inbound Ticket<span>" +dateTime+"</span> </div>"
+                                // +"<div>"
+                                // //+data[x].ts+"</div>"
+                                // +"Inbound Ticket </div>"
                                 +"<div><a href='javascript:void(0)' id='"+
                                     data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id +"' onclick='OpenTicket(this)'>"
                                     +data[x].ticketid
                                     +"</a>  <b id='"
-                                    +data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id 
+                                    +data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id
                                     +"' onclick='MarkAsRead(this);'>x</b></div>";//+": "+data[x].message;
                             messages.appendChild(message);
                             messages.insertBefore(message, messages.firstChild);
@@ -133,7 +132,7 @@
                             if(_count>0){
                                 var obj = {
                                             msg: "NewTicket",
-                                            paramters: _count 
+                                            paramters: _count
                                     } ;
                                     window.parent.postMessage(obj, "*");
                             }
@@ -144,7 +143,7 @@
         })();
 
         function MarkAsRead(elem){
-            //alert(elem.id);           
+            //alert(elem.id);
             try{
                 var _objID=elem.id.split('/')[2];
                     $.ajax({
@@ -191,7 +190,7 @@
             }
             catch(err){}
         }
-       
+
     </script>
 </body>
 </html>

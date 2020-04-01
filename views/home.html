@@ -1,17 +1,19 @@
-
 <html>
 <head>
         <link href="content/css/style.css" rel="stylesheet" />
-        <link href='http://fonts.googleapis.com/css?family=Lato:400,100,300,700' rel='stylesheet' type='text/css' />
-        <link href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,700' rel='stylesheet' type='text/css' />
+
+
+<link href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
 </head>
 <body>
-    <div >  <i class="fa fa-bell-o" aria-hidden="true" style=" position: absolute; right: 33px; top: 14px;" onclick="openList()"></i>  <span class="notification_no" id="spCount" onclick="openList()">0</span>
+    <div > <i class="fa fa-bell-o" aria-hidden="true" style=" position: absolute; right: 33px; top: 14px;" onclick="openList()"  ></i>    <span class="notification_no" id="spCount" onclick="openList()">0</span>
     <div id="mainDiv">
         <div class="notification_list"></div>
     <div class="notification_container">
         <ul class="notification_data" id="listData" >
-            
+
                 <!-- <li>
                     <div class="notification_hd">
                         <span>PB12324123</span> <span>12 May 18 12:15 PM</span>
@@ -43,7 +45,7 @@ crossorigin="anonymous"></script>
         try{
         var vars = [], hash;
         var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        
+
         for(var i = 0; i < hashes.length; i++)
         {
             hash = hashes[i].split('=');
@@ -63,28 +65,28 @@ crossorigin="anonymous"></script>
         // Get Elements
         var status = element('listData');
         var  spCount= element('spCount');
-        
+
 
         // Connect to socket.io
-        var socket = io.connect('http://10.80.10.140:4000/');
+        var socket = io.connect('https://notificationsocket.policybazaar.com/');
 //alert(getUrlVars()["eid"]);
         socket.emit('GetMyData',  {
                         eid:getUrlVars()["eid"]
                     },function(data){
-                
+
             });
 
         // Check for connection
         socket.on('output', function(data){
             var _count=0;
-            
-                
+
+
                 if(data.length>0){
-                   
-                   
+
+
                     for(var x = 0;x < data.length;x++){
                         // Build out message div
-                      
+
                         if( data[x].uid == getUrlVars()["eid"] ){
                             _count=_count+1;
                             //parent.OpenNotification(_count);
@@ -97,7 +99,7 @@ crossorigin="anonymous"></script>
                         //dateTime = moment(dateTime).fromNow();
 
                         var childdata = '<li id="'+data[x]._id+'">    <div class="notification_hd">    <span>'
-                            +data[x].entID+'</span> <span>' 
+                            +data[x].entID+'</span> <span>'
                         + dateTime + '</span> </div>  <p>'+data[x].msg+'</p>'+
                         _OpenLink+
                         '<a  href="javascript:void(0);" class="close_tkt" onclick="MarkRead(\''+data[x]._id+'\');">X</a> </li>';
@@ -106,21 +108,21 @@ crossorigin="anonymous"></script>
                         if (_div.style.display === "none") {
                           _div.style.display = "block";
                          }
-                        // message.innerHTML ="<div id='"+data[x]._id+"'>" 
-                        //     //+data[x].ts+"</div>" 
-                        //     +"Inbound Ticket<span>" +dateTime+"</span> </div>" 
-                        //     // +"<div>" 
-                        //     // //+data[x].ts+"</div>" 
-                        //     // +"Inbound Ticket </div>" 
+                        // message.innerHTML ="<div id='"+data[x]._id+"'>"
+                        //     //+data[x].ts+"</div>"
+                        //     +"Inbound Ticket<span>" +dateTime+"</span> </div>"
+                        //     // +"<div>"
+                        //     // //+data[x].ts+"</div>"
+                        //     // +"Inbound Ticket </div>"
                         //     +"<div><a href='javascript:void(0)' id='"+
                         //         data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id +"' onclick='OpenTicket(this)'>"
                         //         +data[x].ticketid
                         //         +"</a>  <b id='"
-                        //         +data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id 
+                        //         +data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id
                         //         +"' onclick='MarkAsRead(this);'>x</b></div>";//+": "+data[x].message;
                         // messages.appendChild(message);
                         // messages.insertBefore(message, messages.firstChild);
-                        
+
                         }
                     }
                     var _curCount=parseInt(spCount.innerHTML);
@@ -132,7 +134,7 @@ crossorigin="anonymous"></script>
                         if(_count>0){
                             var obj = {
                                         msg: "NewTicket",
-                                        paramters: _count 
+                                        paramters: _count
                                 } ;
                                 window.parent.postMessage(obj, "*");
                         }
@@ -143,7 +145,7 @@ crossorigin="anonymous"></script>
                     _div.style.display = "none";
                     var obj = {
                     msg: "NewTicket",
-                    paramters: 2 
+                    paramters: 2
                                     } ;
 
         window.parent.postMessage(obj, "*");
@@ -151,14 +153,14 @@ crossorigin="anonymous"></script>
             });
 
     })();
-    
+
     function openList(){
        var _div= document.getElementById('mainDiv');
        if (_div.style.display === "none") {
             _div.style.display = "block";
             var obj = {
                     msg: "NewTicket",
-                    paramters: 1 
+                    paramters: 1
                                     } ;
 
         window.parent.postMessage(obj, "*");
@@ -166,38 +168,38 @@ crossorigin="anonymous"></script>
             _div.style.display = "none";
             var obj = {
                     msg: "NewTicket",
-                    paramters: 2 
+                    paramters: 2
                                     } ;
 
         window.parent.postMessage(obj, "*");
         }
 
-       
+
     }
     function MarkRead(elem){
-    //alert(elem);           
+    //alert(elem);
         try{
             var _objID=elem;
                 $.ajax({
-                        url: "http://notification.policybazaar.com:8080/api/MarkTicketAsRead",
+                        url: "https://notification.policybazaar.com/api/MarkTicketAsRead",
                         type: "POST",
                         data: {
                                 _id:_objID,
-                                uby:getUrlVars()["eid"] 
+                                uby:getUrlVars()["eid"]
                             },
                         dataType: "json",
                         success: function (result) {
                             var _div= document.getElementById(_objID);
                             _div.outerHTML = "";
-                            var obj = {
+var obj = {
                                         msg: "NewTicket",
-                                        paramters: parseInt(parseInt(spCount.innerHTML)-1) 
+                                        paramters: parseInt(parseInt(spCount.innerHTML)-1)
                                 } ;
                                 window.parent.postMessage(obj, "*");
 
-                            spCount.innerHTML=parseInt(parseInt(spCount.innerHTML)-1);
+    spCount.innerHTML=parseInt(parseInt(spCount.innerHTML)-1);
 
-                           
+
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             //alert(xhr.status);
@@ -210,9 +212,9 @@ crossorigin="anonymous"></script>
 
     function OpenDetailPage(url,id){
         try{
-            var _objID=id;
+           var _objID=id;
                 $.ajax({
-                        url: "http://notification.policybazaar.com:8080/api/MarkTicketAsRead",
+                        url: "https://notification.policybazaar.com/api/MarkTicketAsRead",
                         type: "POST",
                         data: {
                                 _id:id
@@ -223,15 +225,14 @@ crossorigin="anonymous"></script>
                             //_div.outerHTML = "";
                             var _url=url;
                             window.parent.location.href= _url;
-
-                             var _div= document.getElementById(_objID);
+                                 var _div= document.getElementById(_objID);
                             _div.outerHTML = "";
                             var obj = {
                                         msg: "NewTicket",
-                                        paramters: parseInt(parseInt(spCount.innerHTML)-1) 
+                                        paramters: parseInt(parseInt(spCount.innerHTML)-1)
                                 } ;
                                 window.parent.postMessage(obj, "*");
-                                
+
                             spCount.innerHTML=parseInt(parseInt(spCount.innerHTML)-1);
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
@@ -242,6 +243,6 @@ crossorigin="anonymous"></script>
         }
         catch(err){}
     }
-   
+
 </script>
 </html>

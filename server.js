@@ -1,4 +1,9 @@
+// server.js
 
+// BASE SETUP
+// =============================================================================
+
+// call the packages we need
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
@@ -9,7 +14,8 @@ var bodyParser = require('body-parser');
 //var url = "mongodb://10.0.8.62:27017/test";
 
 const client = require('socket.io').listen(4000).sockets;
-
+var cors=require('cors');
+app.use(cors({ origin: ['https://notificationsocket.policybazaar.com','http://pbsupportuat.policybazaar.com','http://pbsupport.policybazaar.com','http://localhost:61750','https://bmszone.docprime.com','https://bmszone.policybazaar.com'] }));
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -28,24 +34,18 @@ app.use(express.static(__dirname));
 
 // test route to make sure everything is working (accessed at GET http://10.0.11.69:8080/api)
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    res.json({ message: 'hooray! welcome to our api!' });
 });
 
 app.get('/home', function(req,res){
-    console.log('home');    
-    res.render('index.html');  
+    console.log('home');
+    res.render('index.html');
     //res.sendFile('index.html', {root : __dirname });
 });
 
 app.get('/home1', function(req,res){
-    console.log('home1');    
-    res.render('home.html');  
-    //res.sendFile('index.html', {root : __dirname });
-});
-
-app.get('/flashmsg', function(req,res){
-    console.log('flashmsg');    
-    res.render('flashmsg.html');  
+    console.log('home1');
+    res.render('home.html');
     //res.sendFile('index.html', {root : __dirname });
 });
 // more routes for our API will happen here
@@ -77,9 +77,9 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
         //     // Emit the messages
         //     socket.emit('output', res);
         // });
-       
+
         socket.on('GetMyData', function(data){
-            //let name = data.UserID;          
+            //let name = data.UserID;
             console.log(data);
             var _date=new Date();
             _date.setDate(_date.getMinutes()-120);
@@ -99,8 +99,8 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
 
         });
 
-        socket.on('MarkRead', function(data){                   
-           
+        socket.on('MarkRead', function(data){
+
             // db.collection( 'students' ).update (
             //     { _id : doc._id },
             //     { $set : { scores:zz } },
@@ -109,12 +109,12 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
             //     }
             // );
             try{
-                //console.log(data._id);  
-            chat.update({ '_id' : ObjectID(data._id )},{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby  }},function(err, res){
+                //console.log(data._id);
+            chat.update({ '_id' :ObjectID( data._id) },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby  }},function(err, res){
                 if(err){
                     console.log(res);
                 }
-                //console.log(res);  
+                //console.log(res);
                 // console.log(res);
                 // // Emit the messages
                 // socket.emit('output', res);
@@ -124,6 +124,7 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
         });
     });
 });
+
 
 router.route('/AddNewMsg')
     // create a bear (accessed at POST http://10.0.11.69:8080/AddTicketNotification)
@@ -192,7 +193,7 @@ router.route('/AddNewMsg')
             console.log('hello1');
             // Connect to Socket.io
             console.log(client);
-           
+
                 console.log('hello connected...');
                 var chat = db.collection('Notification');
                 //req.body.read = false;
@@ -203,28 +204,28 @@ router.route('/AddNewMsg')
                 });
                // req.body.cd= new Date();
                 console.log(req.body);
-                chat.insert(req.body, function(){                   
-                    client.emit('output', req.body);     
-                   console.log("success");              
+                chat.insert(req.body, function(){
+                    client.emit('output', req.body);
+                   console.log("success");
                 });
-                // Get chats from mongo collection               
-            
+                // Get chats from mongo collection
+
             console.log('ASDFAV');
         });
-        console.log(req.body);     
-      
+        console.log(req.body);
+
              res.json({ message: 'true' });
         // });
-    
+
     });
     router.route('/GetAllDataByUserID')
     // create a bear (accessed at POST http://10.0.11.69:8080/AddTicketNotification)
-    .post(function(req, res) {        
+    .post(function(req, res) {
         mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3', function(err, db){
-                   
-              
+
+
                 var chat = db.collection('Notification');
-               
+
                 var query = {uid: data.eid};
             console.log(query);
             chat.find(query).limit(100).sort({cd:-1}).toArray(function(err, res){
@@ -241,26 +242,25 @@ router.route('/AddNewMsg')
     // create a bear (accessed at POST http://10.0.11.69:8080/api/bears)
     .post(function(req, res) {
         console.log('MarkTicketAsRead');
-        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3', function(err, db){           
-                var chat = db.collection('Notification');               
+        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3', function(err, db){
+                var chat = db.collection('Notification');
                 console.log(req.body);
                 try{
                     //  element.ld= new Date();
                     //  element.uby= 0;
-                    console.log(req.body._id);  
-                chat.update({ '_id' :ObjectID( req.body._id) },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby }},function(err, res){
+                    console.log(req.body._id);
+                chat.update({ '_id' : ObjectID(req.body._id) },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby }},function(err, res){
                     if(err){
-                        //console.log(res);
+                        console.log(res);
                     }
-                   // console.log(res);
                 });
             }
-            catch(e){console.log(e);  }                
+            catch(e){console.log(e);  }
         });
-        console.log(req.body);           
+        console.log(req.body);
         res.json({ message: 'true' });
         // });
-    
+
     });
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
@@ -270,4 +270,3 @@ app.use('/api', router);
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
-
