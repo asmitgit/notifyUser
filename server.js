@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.engine('html', require('ejs').renderFile);
 
 app.set('views', __dirname + '/views');
-var port = process.env.PORT || 80;        // set our port
+var port = process.env.PORT || 8080;        // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -40,6 +40,12 @@ app.get('/home', function(req,res){
 app.get('/home1', function(req,res){
     console.log('home1');    
     res.render('home.html');  
+    //res.sendFile('index.html', {root : __dirname });
+});
+
+app.get('/flashmsg', function(req,res){
+    console.log('flashmsg');    
+    res.render('flashmsg.html');  
     //res.sendFile('index.html', {root : __dirname });
 });
 // more routes for our API will happen here
@@ -118,6 +124,66 @@ mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.8
         });
     });
 });
+
+router.route('/AddNewMsg')
+    // create a bear (accessed at POST http://10.0.11.69:8080/AddTicketNotification)
+    .post(function(req, res) {
+        console.log('hello');
+        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3', function(err, db){
+            console.log('hello1');
+            // Connect to Socket.io
+            console.log(client);
+           
+                console.log('hello connected...');
+                var chat = db.collection('PushMessage');
+                //req.body.read = false;
+                req.body.forEach(element => {
+                    element.cd= new Date();
+                    element.ld= new Date();
+                    element.uby= 0;
+                });
+               // req.body.cd= new Date();
+                console.log(req.body);
+                chat.insert(req.body, function(){                   
+                    client.emit('newmessage', req.body);     
+                   console.log("success");              
+                });
+                // Get chats from mongo collection               
+            
+            console.log('ASDFAV');
+        });
+        console.log(req.body);     
+      
+             res.json({ message: 'true' });
+        // });
+    
+    });
+
+    router.route('/MarkRead')
+    // create a bear (accessed at POST http://10.0.11.69:8080/api/bears)
+    .post(function(req, res) {
+        console.log('MarkRead');
+        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3', function(err, db){           
+                var chat = db.collection('PushMessage');               
+                console.log(req.body);
+                try{
+                    //  element.ld= new Date();
+                    //  element.uby= 0;
+                    console.log(req.body._id);  
+                chat.update({ '_id' :ObjectID( req.body._id) },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby }},function(err, res){
+                    if(err){
+                        //console.log(res);
+                    }
+                   // console.log(res);
+                });
+            }
+            catch(e){console.log(e);  }                
+        });
+        console.log(req.body);           
+        res.json({ message: 'true' });
+        // });
+    
+    });
     router.route('/AddTicketNotification')
     // create a bear (accessed at POST http://10.0.11.69:8080/AddTicketNotification)
     .post(function(req, res) {

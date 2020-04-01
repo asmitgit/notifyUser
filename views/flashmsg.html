@@ -1,0 +1,189 @@
+
+<html>
+<head>
+           
+</head>
+<body>
+ <div style="    margin: 0 auto;
+ text-align: center;
+ position: relative;
+ width: 800px;">
+
+<div style="position:absolute;bottom: 47px;/* background:#ff0000; *//* height:100px; *//* width: 200px; */left: 45%;font-size: 14px;">
+
+    <span style="
+    display: block;
+    padding: 0 0 3px 0;
+">Lead Id <label id="lblLeadID"></label></span>
+    <span style="
+    display: block;
+"><label id="lblCustName"></label></span>
+</div>
+
+    <span style="    position: absolute;
+    border-radius: 100px;
+    padding: 8px 11px;
+    background: #ffffff;
+    font-size: 14px;
+    color: #868686;
+    right: -16px;
+    border: 1px solid #ffffff;
+    top: -7px;
+    z-index: 999;
+    box-shadow: 1px 2px 9px -3px #000 !important;"
+onclick="MarkRead();"    >X
+</span>
+
+    <img src="https://s3.ap-south-1.amazonaws.com/policycopy/11111/11111/1_5e8318d04ad34a1297ce9498.gif" width="100%">
+ </div>
+    
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script src="../node_modules/moment/moment.js"></script>
+<script>
+    var _objID;
+    var _PageLoad=0;
+    function getUrlVars()
+    {
+        try{
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    catch(err){}
+
+    }
+    (function(){
+        var element = function(id){
+            return document.getElementById(id);
+        }
+
+        // Get Elements
+        var status = element('listData');
+        var  spCount= element('spCount');
+        
+
+        // Connect to socket.io
+        var socket = io.connect('http://localhost:4000/');
+//alert(getUrlVars()["eid"]);
+        socket.emit('GetMyData',  {
+                        eid:getUrlVars()["eid"]
+                    },function(data){
+                
+            });
+
+        // Check for connection
+        socket.on('newmessage', function(data){
+            var _count=0;
+            //alert(12);
+            
+                
+                if(data.length>0){
+                   
+                   
+                    for(var x = 0;x < data.length;x++){
+                        // Build out message div
+                      
+                        if( data[x].uid == getUrlVars()["eid"] ){
+                            _count=_count+1;
+                            _objID=data[x]._id;
+                            $('#lblLeadID').html(data[x].lid)  ;
+                            $('#lblCustName').html(data[x].cname)  ;
+                        // var _OpenLink="";
+                        // if(data[x].url!='' || data[x].url==null){
+                        //     _OpenLink='<a href="javascript:void(0);" class="open_tkt" onclick="OpenDetailPage(\''+data[x].url+'\',\''+data[x]._id+'\');">Click to open</a>'
+                        // }
+                        // var dateTime = new Date(data[x].cd);
+                        // dateTime = moment(dateTime).calendar();                        
+                    }
+                }
+                   
+                        if(_count>0){
+                            var obj = {
+                                        msg: "NewPushMsg",
+                                        paramters: _count 
+                                } ;
+                                window.parent.postMessage(obj, "*");
+                        }
+                    
+                    }
+                });
+
+    })();
+    
+    
+    function MarkRead(){
+    //alert(elem);           
+        try{
+            
+                $.ajax({
+                        url: "http://localhost:8080/api/MarkRead",
+                        type: "POST",
+                        data: {
+                                _id:_objID,
+                                uby:getUrlVars()["eid"] 
+                            },
+                        dataType: "json",
+                        success: function (result) {
+                            var obj = {
+                                        msg: "Remove",
+                                        paramters: 1
+                                } ;
+                                window.parent.postMessage(obj, "*");                           
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            //alert(xhr.status);
+                            //alert(thrownError);
+                        }
+                    });
+        }
+        catch(err){}
+    }
+
+    function OpenDetailPage(url,id){
+        try{
+            var _objID=id;
+                $.ajax({
+                        url: "http://notification.policybazaar.com:8080/api/MarkTicketAsRead",
+                        type: "POST",
+                        data: {
+                                _id:id
+                            },
+                        dataType: "json",
+                        success: function (result) {
+                            //var _div= document.getElementById(elem.id.split('/')[2]);
+                            //_div.outerHTML = "";
+                            var _url=url;
+                            window.parent.location.href= _url;
+
+                             var _div= document.getElementById(_objID);
+                            _div.outerHTML = "";
+                            var obj = {
+                                        msg: "NewTicket",
+                                        paramters: parseInt(parseInt(spCount.innerHTML)-1) 
+                                } ;
+                                window.parent.postMessage(obj, "*");
+                                
+                            spCount.innerHTML=parseInt(parseInt(spCount.innerHTML)-1);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            //alert(xhr.status);
+                            //alert(thrownError);
+                        }
+                    });
+        }
+        catch(err){}
+    }
+   
+</script>
+</html>
