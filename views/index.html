@@ -88,12 +88,12 @@
 
             // Connect to socket.io
             var socket = io.connect('http://10.80.10.140:4000');
-//alert(getUrlVars()["eid"]);
-            socket.emit('GetMyData',  {
-                            eid:getUrlVars()["eid"]
-                        },function(data){
-                    console.log(data);
-                });
+
+            // socket.emit('GetMyData',  {
+            //                 eid:getUrlVars()["eid"]
+            //             },function(data){
+            //         console.log(data);
+            //     });
 
             // Check for connection
             socket.on('output', function(data){

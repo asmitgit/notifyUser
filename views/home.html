@@ -67,16 +67,16 @@ crossorigin="anonymous"></script>
         var  spCount= element('spCount');
 
 
-        // Connect to socket.io
+
         var socket = io.connect('https://notificationsocket.policybazaar.com/');
-//alert(getUrlVars()["eid"]);
-        socket.emit('GetMyData',  {
-                        eid:getUrlVars()["eid"]
-                    },function(data){
 
-            });
+        // socket.emit('GetMyData',  {
+        //                 eid:getUrlVars()["eid"]
+        //             },function(data){
 
-        // Check for connection
+        //     });
+
+        
         socket.on('output', function(data){
             var _count=0;
 
@@ -108,20 +108,7 @@ crossorigin="anonymous"></script>
                         if (_div.style.display === "none") {
                           _div.style.display = "block";
                          }
-                        // message.innerHTML ="<div id='"+data[x]._id+"'>"
-                        //     //+data[x].ts+"</div>"
-                        //     +"Inbound Ticket<span>" +dateTime+"</span> </div>"
-                        //     // +"<div>"
-                        //     // //+data[x].ts+"</div>"
-                        //     // +"Inbound Ticket </div>"
-                        //     +"<div><a href='javascript:void(0)' id='"+
-                        //         data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id +"' onclick='OpenTicket(this)'>"
-                        //         +data[x].ticketid
-                        //         +"</a>  <b id='"
-                        //         +data[x].eid+"/"+data[x].ticketid+"/"+data[x]._id
-                        //         +"' onclick='MarkAsRead(this);'>x</b></div>";//+": "+data[x].message;
-                        // messages.appendChild(message);
-                        // messages.insertBefore(message, messages.firstChild);
+                        
 
                         }
                     }
@@ -202,8 +189,7 @@ var obj = {
 
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
-                            //alert(xhr.status);
-                            //alert(thrownError);
+                           
                         }
                     });
         }

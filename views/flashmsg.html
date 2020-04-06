@@ -131,11 +131,11 @@ crossorigin="anonymous"></script>
         // Connect to socket.io
         var socket = io.connect('https://notificationsocket.policybazaar.com/');
 //alert(getUrlVars()["eid"]);
-        socket.emit('GetMyData',  {
-                        eid:getUrlVars()["eid"]
-                    },function(data){
+        // socket.emit('GetMyData',  {
+        //                 eid:getUrlVars()["eid"]
+        //             },function(data){
                 
-            });
+        //     });
 
         // Check for connection
         socket.on('newmessage', function(data){
