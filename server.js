@@ -15,10 +15,10 @@ var bodyParser = require('body-parser');
 
 const client = require('socket.io').listen(4000).sockets;
 var cors=require('cors');
-app.use(cors({ origin: ['https://notificationsocket.policybazaar.com/',
+app.use(cors({ origin: ['notificationsocket.policybazaar.com',
 'http://pbsupportuat.policybazaar.com/',
 'http://pbsupport.policybazaar.com/',
-'https://notificationsocket.policybazaar.com/socket.io/',
+'https://notificationsocket.policybazaar.com/',
 'http://localhost:61750','https://bmszone.docprime.com/','https://bmszone.policybazaar.com/'] }));
 
 // configure app to use bodyParser()
