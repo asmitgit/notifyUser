@@ -15,7 +15,7 @@ var bodyParser = require('body-parser');
 
 
 var cors=require('cors');
-app.use(cors({ credentials: false, origin: 'https://notificationsocket.policybazaar.com' }));
+//app.use(cors({ credentials: false, origin: 'https://notificationsocket.policybazaar.com' }));
 
 
 
@@ -26,17 +26,17 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     next();
 });
-// app.use(cors({
-//     origin: function(origin, callback){
-//       return callback(null, true);
-//     },
-//     optionsSuccessStatus: 200,
-//     credentials: true
-//   }));
+app.use(cors({
+    origin: function(origin, callback){
+      return callback(null, true);
+    },
+    optionsSuccessStatus: 200,
+    credentials: true
+  }));
 
 var expressSocket = require('express');
-var appSocket = express();
-var server = appSocket.listen(4000);
+var appSocket = expressSocket();
+var serverSocket = appSocket.listen(4000);
 appSocket.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "https://notification.policybazaar.com");
     
@@ -44,7 +44,7 @@ appSocket.use(function(req, res, next) {
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     next();
 });
-const client =  require('socket.io').listen(server);//require('socket.io').listen(4000).sockets;
+const client =  require('socket.io').listen(serverSocket);//require('socket.io').listen(4000).sockets;
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
