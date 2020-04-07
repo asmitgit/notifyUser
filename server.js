@@ -15,12 +15,12 @@ var bodyParser = require('body-parser');
 
 const client = require('socket.io').listen(4000).sockets;
 var cors=require('cors');
-app.use(cors({ origin: 'https://notificationsocket.policybazaar.com' }));
+app.use(cors({ credentials: true, origin: 'https://notificationsocket.policybazaar.com' }));
 
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "https://notificationsocket.policybazaar.com");
-    res.header("Access-Control-Allow-Credentials", "false");
+    
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     next();
