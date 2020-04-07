@@ -36,7 +36,7 @@ app.use(cors({
 
 var expressSocket = require('express');
 var appSocket = expressSocket();
-var serverSocket = appSocket.listen(4000);
+
 appSocket.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "https://notification.policybazaar.com");
     
@@ -44,6 +44,7 @@ appSocket.use(function(req, res, next) {
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     next();
 });
+var serverSocket = appSocket.listen(4000);
 const client =  require('socket.io').listen(serverSocket);//require('socket.io').listen(4000).sockets;
 
 // configure app to use bodyParser()
