@@ -34,7 +34,12 @@ app.use(function(req, res, next) {
 //     credentials: true
 //   }));
 
-const client = require('socket.io').listen(4000).sockets;
+var expressSocket = require('express');
+var appSocket = express();
+var server = appSocket.listen(4000);
+
+const client =  require('socket.io').listen(server);//require('socket.io').listen(4000).sockets;
+
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
