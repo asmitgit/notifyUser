@@ -15,7 +15,14 @@ var bodyParser = require('body-parser');
 
 const client = require('socket.io').listen(4000).sockets;
 var cors=require('cors');
-app.use(cors({ credentials: true, origin: 'https://notificationsocket.policybazaar.com' }));
+//app.use(cors({ credentials: false, origin: 'https://notificationsocket.policybazaar.com' }));
+app.use(cors({
+    origin: function(origin, callback){
+      return callback(null, true);
+    },
+    optionsSuccessStatus: 200,
+    credentials: true
+  }));
 
 
 app.use(function(req, res, next) {
