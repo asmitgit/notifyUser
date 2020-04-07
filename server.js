@@ -15,11 +15,11 @@ var bodyParser = require('body-parser');
 
 const client = require('socket.io').listen(4000).sockets;
 var cors=require('cors');
-app.use(cors({ origin: ['notificationsocket.policybazaar.com',
-'http://pbsupportuat.policybazaar.com/',
-'http://pbsupport.policybazaar.com/',
-'https://notificationsocket.policybazaar.com/',
-'http://localhost:61750','https://bmszone.docprime.com/','https://bmszone.policybazaar.com/'] }));
+// app.use(cors({ origin: ['notificationsocket.policybazaar.com',
+// 'https://notificationsocket.policybazaar.com/',
+// 'http://pbsupportuat.policybazaar.com',
+// 'http://pbsupport.policybazaar.com',
+// 'http://localhost:61750','https://bmszone.docprime.com/','https://bmszone.policybazaar.com/'] }));
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -51,6 +51,12 @@ app.get('/home', function(req,res){
 app.get('/flashmsg', function(req,res){
     console.log('flashmsg');    
     res.render('flashmsg.html');  
+    //res.sendFile('index.html', {root : __dirname });
+});
+
+app.get('/luckydraw', function(req,res){
+    console.log('lottery');    
+    res.render('lottery.html');  
     //res.sendFile('index.html', {root : __dirname });
 });
 app.get('/home1', function(req,res){
@@ -127,6 +133,66 @@ app.get('/home1', function(req,res){
 //     });
 // });
 
+router.route('/StartLuckydraw')
+    
+    .post(function(req, res) {
+        
+        // mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3', 
+        // function(err, db){
+            
+        
+        //         var chat = db.collection('PushMessage');
+                
+        //         req.body.forEach(element => {
+        //             element.cd= new Date();
+        //             element.ld= new Date();
+        //             element.uby= 0;
+        //         });
+                
+        //         chat.insert(req.body, function(){                   
+        //             client.emit('newmessage', req.body);     
+
+        //         });
+                
+            
+            
+        // });
+        var size, lowest, highest;
+        size=req.body.size;
+        lowest=req.body.lowest;
+        highest=req.body.highest;
+        var numbers = [];
+	for(var i = 0; i < size; i++) {
+		var add = true;
+		var randomNumber = Math.floor(Math.random() * highest) + 1;
+		for(var y = 0; y < highest; y++) {
+			if(numbers[y] == randomNumber) {
+				add = false;
+			}
+		}
+		if(add) {
+			numbers.push(randomNumber);
+		} else {
+			i--;
+		}
+	}
+  
+	var highestNumber = 0;
+	for(var m = 0; m < numbers.length; m++) {
+		for(var n = m + 1; n < numbers.length; n++) {
+			if(numbers[n] < numbers[m]) {
+				highestNumber = numbers[m];
+				numbers[m] = numbers[n];
+				numbers[n] = highestNumber;
+			}
+		}
+	}
+          
+    client.emit('luckynumber', numbers);
+             res.json({ message: 'true',data:numbers });
+    
+    
+    });
 
 router.route('/AddNewMsg')
     

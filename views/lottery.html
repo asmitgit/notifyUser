@@ -1,0 +1,200 @@
+
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<style>
+.celebration {
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    width: 600px;
+    border: 10px solid #464444;
+    box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2), 0 4px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 10px;
+}
+.close_btn{position: absolute;
+    border-radius: 100px;
+    padding: 12px 17px;
+    background: #ffffff;
+    font-size: 23px;
+    color: #868686;
+    right: -15px;
+    border: 1px solid #ffffff;
+    top: -17px;
+    z-index: 999;
+    box-shadow: 1px 2px 9px -3px #000 !important;
+    cursor: pointer;
+    font-weight: bold;}
+
+    .Imgresolution{width:600px; height:450px;}
+
+
+    @media only screen and (max-width :768px){
+        .Imgresolution{width:100%; height:auto;}
+.celebration{ width: 100%;box-sizing: border-box;
+
+}
+.close_btn{    padding: 6px 11px;    font-size: 19px;}
+
+
+
+}
+</style>
+<head>
+           
+</head>
+<body>
+ <div class="celebration">
+
+
+<div style="position:absolute;top: 0;/* background:#ff0000; *//* height:100px; *//* width: 200px; */left: 20px;font-size: 14px;width: 330px;/* border: 1px solid; */">
+    <span style="width:100%;display:block;padding: 10px 0 9px 0;font-size: 24px;text-align: left;color: #3a7ed2dd;">
+        Yeah...!!! Payment done!!</span>
+    <span style="
+        display: block;
+        padding: 0 0 3px 0;
+        font-size: 16px;
+        /* border: 1px solid; */
+        text-align: left;
+        color: #ff6e08;
+        "><em style="width:100px;display: inline-block;font-style: normal;/* color: #ddd; */">Lead Id:</em>
+        <label id="lblLeadID"></label></span>
+        <span style="
+        display: block;
+        font-size: 16px;
+        text-align: left;
+        color: #ff6e08;
+        "><em style="width:100px;display: inline-block;font-style: normal;">Cust Name:</em>
+        <label id="lblCustName"></label>
+    </span>
+    </div>
+
+
+
+    <span class="close_btn"
+onclick="MarkRead();" >X
+</span>
+
+    <img src="https://s3.ap-south-1.amazonaws.com/policycopy/11111/11111/1_5e8318d04ad34a1297ce9498.gif" 
+    class="Imgresolution">
+ </div>
+    
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script src="../node_modules/moment/moment.js"></script>
+<script>
+    var _objID;
+    var _PageLoad=0;
+    function getUrlVars()
+    {
+        try{
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    catch(err){}
+
+    }
+    (function(){
+        var element = function(id){
+            return document.getElementById(id);
+        }
+
+        // Get Elements
+        var status = element('listData');
+        var  spCount= element('spCount');
+        
+
+        // Connect to socket.io
+        var socket = io.connect('https://notificationsocket.policybazaar.com/');
+//alert(getUrlVars()["eid"]);
+        // socket.emit('GetMyData',  {
+        //                 eid:getUrlVars()["eid"]
+        //             },function(data){
+                
+        //     });
+
+        // Check for connection
+        socket.on('newmessage', function(data){
+            var _count=0;
+            //alert(12);
+            
+                
+                if(data.length>0){
+                   
+                   
+                    for(var x = 0;x < data.length;x++){
+                        // Build out message div
+                      
+                        if( data[x].uid == getUrlVars()["eid"] ){
+                            _count=_count+1;
+                            _objID=data[x]._id;
+                            $('#lblLeadID').html(data[x].lid)  ;
+                            $('#lblCustName').html(data[x].cname)  ;
+                        // var _OpenLink="";
+                        // if(data[x].url!='' || data[x].url==null){
+                        //     _OpenLink='<a href="javascript:void(0);" class="open_tkt" onclick="OpenDetailPage(\''+data[x].url+'\',\''+data[x]._id+'\');">Click to open</a>'
+                        // }
+                        // var dateTime = new Date(data[x].cd);
+                        // dateTime = moment(dateTime).calendar();                        
+                    }
+                }
+                   
+                        if(_count>0){
+                            var obj = {
+                                        msg: "NewPushMsg",
+                                        paramters: _count 
+                                } ;
+                                window.parent.postMessage(obj, "*");
+                        }
+                    
+                    }
+                });
+
+    })();
+    
+    
+    function MarkRead(){
+    //alert(elem);           
+        try{
+            
+                $.ajax({
+                        url: "https://notification.policybazaar.com/api/MarkRead",
+                        type: "POST",
+                        data: {
+                                _id:_objID,
+                                uby:getUrlVars()["eid"] 
+                            },
+                        dataType: "json",
+                        success: function (result) {
+                            var obj = {
+                                        msg: "Remove",
+                                        paramters: 1
+                                } ;
+                                window.parent.postMessage(obj, "*");                           
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            //alert(xhr.status);
+                            //alert(thrownError);
+                        }
+                    });
+        }
+        catch(err){}
+    }
+
+  
+   
+</script>
+</html>
