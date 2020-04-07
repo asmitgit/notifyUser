@@ -27,19 +27,19 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     next();
 });
-// app.use(cors({
-//     origin: function(origin, callback){
-//       return callback(null, true);
-//     },
-//     optionsSuccessStatus: 200,
-//     credentials: true
-//   }));
+app.use(cors({
+    origin: function(origin, callback){
+      return callback(null, true);
+    },
+    optionsSuccessStatus: 200,
+    credentials: true
+  }));
 
 var expressSocket = require('express');
 var appSocket = expressSocket();
 
 appSocket.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://notification.policybazaar.com");
+    res.header("Access-Control-Allow-Origin", req.header('origin') );
     
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
@@ -184,6 +184,11 @@ router.route('/StartLuckydraw')
             
             
         // });
+        var _agent=[];
+        for(var i = 0; i < 500; i++) {
+            _agent.push({'Sno':i,'Name':'user '+i})
+        }
+
         var size, lowest, highest;
         size=req.body.size;
         lowest=req.body.lowest;
@@ -214,9 +219,15 @@ router.route('/StartLuckydraw')
 			}
 		}
 	}
-          
-    client.emit('luckynumber', numbers);
-             res.json({ message: 'true',data:numbers });
+        
+    
+    var _result=[];
+    numbers.forEach(element => {
+        _result.push(_agent[element]);
+    });
+
+    client.emit('luckynumber', _result);
+             res.json({ message: 'true',data:_result });
     
     
     });
