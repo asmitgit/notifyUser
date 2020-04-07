@@ -26,12 +26,11 @@ var corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://notificationsocket.policybazaar.com");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-    next();
-});
+  app.use(function(req, res) {
+    res.header("Access-Control-Allow-Origin", "notificationsocket.policybazaar.com"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    
+  });
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
