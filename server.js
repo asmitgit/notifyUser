@@ -15,14 +15,19 @@ var bodyParser = require('body-parser');
 
 const client = require('socket.io').listen(4000).sockets;
 var cors=require('cors');
-// app.use(cors({ origin: ['notificationsocket.policybazaar.com',
-// 'https://notificationsocket.policybazaar.com/',
-// 'http://pbsupportuat.policybazaar.com',
-// 'http://pbsupport.policybazaar.com',
-// 'http://localhost:61750','https://bmszone.docprime.com/','https://bmszone.policybazaar.com/'] }));
+app.use(cors({ origin: ['notificationsocket.policybazaar.com',
+'https://notificationsocket.policybazaar.com',
+'http://pbsupportuat.policybazaar.com',
+'http://pbsupport.policybazaar.com',
+'http://localhost:61750','https://bmszone.docprime.com/','https://bmszone.policybazaar.com/'] }));
+
+var corsOptions = {
+    origin: 'https://notificationsocket.policybazaar.com',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "https://notificationsocket.policybazaar.com");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     next();
