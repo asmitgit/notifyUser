@@ -10,8 +10,25 @@ var bodyParser = require('body-parser');
 
 
 
+
 //var MongoClient = require('mongodb').MongoClient;
 //var url = "mongodb://10.0.8.62:27017/test";
+const sql = require("mssql");
+const msconfig = {
+    user: 'BackofficeSys',
+    password: 'MT#123#C@re',
+    server: 'PBAGL01.ETECHACES.COM',       
+    database: 'PBCroma',
+    options: {           
+        encrypt: false,
+        enableArithAbort:true
+    },
+    pool: {
+        max: 100,
+        min: 0,
+        idleTimeoutMillis: 30000
+    }
+};
 
 
 var cors=require('cors');
@@ -160,74 +177,109 @@ app.get('/home1', function(req,res){
 //     });
 // });
 
+
+
+router.route('/DBCHK')
+    
+    .post(function(req, res) 
+    {
+        
+        res.json({ message: 'false',data:"" });
+});
+
+
+
 router.route('/StartLuckydraw')
     
     .post(function(req, res) {
         
-        // mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3', 
-        // function(err, db){
-            
-        
-        //         var chat = db.collection('PushMessage');
-                
-        //         req.body.forEach(element => {
-        //             element.cd= new Date();
-        //             element.ld= new Date();
-        //             element.uby= 0;
-        //         });
-                
-        //         chat.insert(req.body, function(){                   
-        //             client.emit('newmessage', req.body);     
-
-        //         });
-                
-            
-            
-        // });
         var _agent=[];
-        for(var i = 0; i < 500; i++) {
-            _agent.push({'Sno':i,'Name':'user '+i})
-        }
+        var dbConn = new sql.ConnectionPool(msconfig);
+        dbConn.connect().then(function () {
+            var request = new sql.Request(dbConn);
+            request.input('ProductID', sql.Int, req.body.pid).input('Type', sql.Int, 1).input('ContestType', sql.Int, req.body.ctype)
+            .execute("mtx.UpdateLuckAgentDetails").then(function (recordSet) {
+                //console.log(recordSet.recordset);
+                _agent=recordSet.recordset;
 
-        var size, lowest, highest;
-        size=req.body.size;
-        lowest=req.body.lowest;
-        highest=req.body.highest;
-        var numbers = [];
-	for(var i = 0; i < size; i++) {
-		var add = true;
-		var randomNumber = Math.floor(Math.random() * highest) + 1;
-		for(var y = 0; y < highest; y++) {
-			if(numbers[y] == randomNumber) {
-				add = false;
-			}
-		}
-		if(add) {
-			numbers.push(randomNumber);
-		} else {
-			i--;
-		}
-	}
-  
-	var highestNumber = 0;
-	for(var m = 0; m < numbers.length; m++) {
-		for(var n = m + 1; n < numbers.length; n++) {
-			if(numbers[n] < numbers[m]) {
-				highestNumber = numbers[m];
-				numbers[m] = numbers[n];
-				numbers[n] = highestNumber;
-			}
-		}
-	}
-        
-    
-    var _result=[];
-    numbers.forEach(element => {
-        _result.push(_agent[element]);
-    });
+                dbConn.close();
+                var size, lowest, highest;
+                size=req.body.size;
+                lowest=0;
+                //highest=req.body.highest;
 
-    client.emit('luckynumber', _result);
-             res.json({ message: 'true',data:_result });
+                highest=recordSet.recordset.length-1;
+
+                var numbers = [];
+            for(var i = 0; i < size; i++) {
+                var add = true;
+                var randomNumber = Math.floor(Math.random() * highest) + 1;
+                for(var y = 0; y < highest; y++) {
+                    if(numbers[y] == randomNumber) {
+                        add = false;
+                    }
+                }
+                if(add) {
+                    numbers.push(randomNumber);
+                } else {
+                    i--;
+                }
+            }
+          
+            var highestNumber = 0;
+            for(var m = 0; m < numbers.length; m++) {
+                for(var n = m + 1; n < numbers.length; n++) {
+                    if(numbers[n] < numbers[m]) {
+                        highestNumber = numbers[m];
+                        numbers[m] = numbers[n];
+                        numbers[n] = highestNumber;
+                    }
+                }
+            }
+                
+            
+            var _result=[];
+            var xmldata='<xml>';//<agent Sno="" EmpID="" /> </xml>;
+            numbers.forEach(element => {
+                _result.push(_agent[element]);
+                xmldata=xmldata+'<agent Sno="'+_agent[element].Sno+'" EmpID="'+_agent[element].EmpID+'" />'
+            });
+            xmldata=xmldata+'</xml>';
+            
+            var dbConnUpdate = new sql.ConnectionPool(msconfig);
+            dbConnUpdate.connect().then(function () {
+
+            var requestUpdate = new sql.Request(dbConnUpdate);
+            requestUpdate.input('ProductID', sql.Int, req.body.pid)
+                .input('Type', sql.Int, 2)
+                .input('ContestType', sql.Int, req.body.ctype)
+                .input('xml', sql.Xml, xmldata)
+                .execute("mtx.UpdateLuckAgentDetails").then(function (recordSet) {
+                });
+
+            });
+
+                    client.emit('luckynumber', _result);
+
+                   console.log( xmldata);
+                    
+                     res.json({ message: 'true',data: _result });
+            }).catch(function (err) {
+                console.log(err);
+                dbConn.close();
+                res.json({ message: 'false',data:err });
+            });
+        }).catch(function (err) {
+            console.log(err);
+            res.json({ message: 'false',data:err });
+        });
+
+        console.log(_agent);
+        // for(var i = 0; i < 500; i++) {
+        //     _agent.push({'Sno':i,'Name':'user '+i})
+        // }
+
+       
     
     
     });
