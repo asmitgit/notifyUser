@@ -13,7 +13,7 @@ var bodyParser = require('body-parser');
 
 //var MongoClient = require('mongodb').MongoClient;
 //var url = "mongodb://10.0.8.62:27017/test";
-const sql = require("mssql");
+const sql ="";// require("mssql");
 const msconfig = {
     user: 'BackofficeSys',
     password: 'MT#123#C@re',
