@@ -124,6 +124,11 @@ app.get('/home1', function(req,res){
     res.render('home.html');
     //res.sendFile('index.html', {root : __dirname });
 });
+app.get('/alert', function(req,res){
+    console.log('alert');
+    res.render('alert.html');
+    //res.sendFile('index.html', {root : __dirname });
+});
 // more routes for our API will happen here
     const mongo = require('mongodb').MongoClient;
     var ObjectID = require('mongodb').ObjectID;
