@@ -14,10 +14,26 @@ var bodyParser = require('body-parser');
 //var MongoClient = require('mongodb').MongoClient;
 //var url = "mongodb://10.0.8.62:27017/test";
 const sql = require("mssql");
+// const msconfig = {
+//     user: 'BackofficeSys',
+//     password: 'MT#123#C@re',
+//     server: 'PBAGL01.ETECHACES.COM',       
+//     database: 'PBCroma',
+//     options: {           
+//         encrypt: false,
+//         enableArithAbort:true
+//     },
+//     pool: {
+//         max: 100,
+//         min: 0,
+//         idleTimeoutMillis: 30000
+//     }
+// };
+
 const msconfig = {
-    user: 'BackofficeSys',
-    password: 'MT#123#C@re',
-    server: 'PBAGL01.ETECHACES.COM',       
+    user: 'UATUSER',
+    password: 'UAT123User',
+    server: '10.0.10.43',       
     database: 'PBCroma',
     options: {           
         encrypt: false,
@@ -198,7 +214,7 @@ router.route('/StartLuckydraw')
         dbConn.connect().then(function () {
             var request = new sql.Request(dbConn);
             request.input('ProductID', sql.Int, req.body.pid).input('Type', sql.Int, 1).input('ContestType', sql.Int, req.body.ctype)
-            .execute("mtx.UpdateLuckAgentDetails").then(function (recordSet) {
+            .execute("mtx.UpdateContestDetails").then(function (recordSet) {
                 //console.log(recordSet.recordset);
                 _agent=recordSet.recordset;
 
@@ -254,7 +270,7 @@ router.route('/StartLuckydraw')
                 .input('Type', sql.Int, 2)
                 .input('ContestType', sql.Int, req.body.ctype)
                 .input('xml', sql.Xml, xmldata)
-                .execute("mtx.UpdateLuckAgentDetails").then(function (recordSet) {
+                .execute("mtx.UpdateContestDetails").then(function (recordSet) {
                 });
 
             });
