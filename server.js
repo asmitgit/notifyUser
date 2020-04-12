@@ -14,26 +14,10 @@ var bodyParser = require('body-parser');
 //var MongoClient = require('mongodb').MongoClient;
 //var url = "mongodb://10.0.8.62:27017/test";
 const sql = require("mssql");
-// const msconfig = {
-//     user: 'BackofficeSys',
-//     password: 'MT#123#C@re',
-//     server: 'PBAGL01.ETECHACES.COM',       
-//     database: 'PBCroma',
-//     options: {           
-//         encrypt: false,
-//         enableArithAbort:true
-//     },
-//     pool: {
-//         max: 100,
-//         min: 0,
-//         idleTimeoutMillis: 30000
-//     }
-// };
-
 const msconfig = {
-    user: 'UATUSER',
-    password: 'UAT123User',
-    server: '10.0.10.43',       
+    user: 'BackofficeSys',
+    password: 'MT#123#C@re',
+    server: 'PBAGL01.ETECHACES.COM',       
     database: 'PBCroma',
     options: {           
         encrypt: false,
@@ -45,6 +29,22 @@ const msconfig = {
         idleTimeoutMillis: 30000
     }
 };
+
+// const msconfig = {
+//     user: 'UATUSER',
+//     password: 'UAT123User',
+//     server: '10.0.10.43',       
+//     database: 'PBCroma',
+//     options: {           
+//         encrypt: false,
+//         enableArithAbort:true
+//     },
+//     pool: {
+//         max: 100,
+//         min: 0,
+//         idleTimeoutMillis: 30000
+//     }
+// };
 
 
 var cors=require('cors');
