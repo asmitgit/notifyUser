@@ -24,6 +24,23 @@ body{padding: 0; margin: 0; font-family: "Lato",sans-serif;}
     box-shadow: 1px 2px 9px -3px #000 !important;
     cursor: pointer;
     font-weight: bold;}
+    
+    .bottom_heading{position: absolute;
+      bottom: 0;
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #dc8e00;}
+    .top_heading{color: #ff0000;
+      position: absolute;
+      margin: 0 auto;
+      width: 100%;
+      text-align: center;
+      top: 20px;
+      font-size: 22px;
+      font-weight: bold;}
 
     .Imgresolution{width:600px; height:450px;}
 .top_text{position:absolute;top: 0;left: 20px;font-size: 14px;width: 330px;}
