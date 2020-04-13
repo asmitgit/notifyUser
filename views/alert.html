@@ -38,6 +38,8 @@
 
     <div id="lucky_draw" class="lucky_draw" style="display: none;">
         <div class="box_animation">
+                <span id="spText">Congratulations winners for yesterday!</span>
+
             <ul class="winner_list" id="ulData">
                 <!-- <li><span>Asmit 4 (BP00115)</span></li>
                 <li><span>Asmit 8 (BP00119)</span></li>
@@ -46,6 +48,7 @@
             </ul>
             <img src="../content/img/box3.gif" id="gifImg" class="animation_img">
 
+            <span>Didn't win? Try again, good luck! (smile wala emoji)</span>
             <a href="#" class="close-btnn" onclick="MarkRead(2)">x</a>
         </div>
 
@@ -122,7 +125,17 @@
                         }
                         $("#celebration_container").hide();
                         $("#lucky_draw").show();
-                        setTimeout(function () { $('#ulData').html(_data); console.log(_data); $("#ulData").show(2000); }, 3500);
+                        setTimeout(function () {
+                             $('#ulData').html(_data);
+                             if(data.ctype==1){
+                             $('#spText').html("Congratulations winners for yesterday!");
+                             }
+                             else if(data.ctype==2){
+                             $('#spText').html("Congratulations winners for last week!");
+                             }
+                              console.log(_data); 
+                              $("#ulData").show(2000);
+                             }, 3500);
                         //$('#ulData').html(_data)  ;
                     }
                 }

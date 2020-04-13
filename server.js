@@ -216,7 +216,8 @@ router.route('/StartLuckydraw')
         var dbConn = new sql.ConnectionPool(msconfig);
         dbConn.connect().then(function () {
             var request = new sql.Request(dbConn);
-            request.input('ProductID', sql.Int, req.body.pid).input('Type', sql.Int, 1).input('ContestType', sql.Int, req.body.ctype)
+            request.input('ProductID', sql.Int, req.body.pid).input('Type', sql.Int, 1).
+            input('ContestType', sql.Int, req.body.ctype)
                 .execute("mtx.UpdateContestDetails").then(function (recordSet) {
                     //console.log(recordSet.recordset);
                     _agent = recordSet.recordset;
@@ -277,7 +278,7 @@ router.route('/StartLuckydraw')
                             });
 
                     });
-                    var _emitRes = { "Lucky": _result, "AllUser": _agent };
+                    var _emitRes = { "Lucky": _result, "AllUser": _agent ,"ctype":req.body.ctype};
                     client.emit('luckynumber', _emitRes);
 
                     console.log(xmldata);
