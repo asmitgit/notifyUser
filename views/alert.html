@@ -44,7 +44,7 @@
                 <li><span>Asmit 2 (BP00113)</span></li>
                 <li><span>Asmit 4 (BP00115)</span></li> -->
             </ul>
-            <img src="../content/img/box3.gif" class="animation_img">
+            <img src="../content/img/box3.gif" id="gifImg" class="animation_img">
 
             <a href="#" class="close-btnn" onclick="MarkRead(2)">x</a>
         </div>
@@ -107,6 +107,8 @@
                         msg: "NewPushMsg",
                         paramters: _count
                     };
+                    
+                    $("#gifImg").attr("src","../content/img/box3.gif");
                     window.parent.postMessage(obj, "*");
 
                     if (data.Lucky.length > 0) {
