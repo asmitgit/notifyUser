@@ -73,7 +73,6 @@
             try {
                 var vars = [], hash;
                 var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-
                 for (var i = 0; i < hashes.length; i++) {
                     hash = hashes[i].split('=');
                     vars.push(hash[0]);
@@ -82,8 +81,8 @@
                 return vars;
             }
             catch (err) { }
-
         }
+
         (function () {
 
 
@@ -95,35 +94,40 @@
             // Check for connection
             socket.on('luckynumber', function (data) {
                 $("#ulData").hide();
-
-                var obj = {
-                    msg: "NewPushMsg",
-                    paramters: _count
-                };
-                window.parent.postMessage(obj, "*");
-
-                if (data.length > 0) {
-
-                    var _data = "";
-                    $('#ulData').html('')
-                    for (var x = 0; x < data.length; x++) {
-                        // Build out message div
-                        _data = _data + "<li><span>" + data[x].Name + " (" + data[x].EmployeeID + ")</span></li>	";
+                _count = 0;
+                data.AllUser.forEach(element => {
+                    if (element.EmpID == getUrlVars()["eid"]) {
+                        _count = _count + 1;
 
                     }
-                    $("#celebration_container").hide();
-                    $("#lucky_draw").show();
-                    setTimeout(function () { $('#ulData').html(_data); console.log(_data); $("#ulData").show(2000); }, 3500);
+                });
 
+                if (_count > 0) {
+                    var obj = {
+                        msg: "NewPushMsg",
+                        paramters: _count
+                    };
+                    window.parent.postMessage(obj, "*");
 
+                    if (data.Lucky.length > 0) {
 
+                        var _data = "";
+                        $('#ulData').html('')
+                        for (var x = 0; x < data.Lucky.length; x++) {
+                            // Build out message div
+                            _data = _data + "<li><span>" + data.Lucky[x].Name + " (" + data.Lucky[x].EmployeeID + ")</span></li>	";
 
-                    //$('#ulData').html(_data)  ;
+                        }
+                        $("#celebration_container").hide();
+                        $("#lucky_draw").show();
+                        setTimeout(function () { $('#ulData').html(_data); console.log(_data); $("#ulData").show(2000); }, 3500);
+                        //$('#ulData').html(_data)  ;
+                    }
                 }
             });
 
             socket.on('newmessage', function (data) {
-               
+
                 if (data.length > 0) {
 
 
