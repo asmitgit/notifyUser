@@ -33,11 +33,11 @@ const msconfig = {
 // const msconfig = {
 //     user: 'UATUSER',
 //     password: 'UAT123User',
-//     server: '10.0.10.43',       
+//     server: '10.0.10.43',
 //     database: 'PBCroma',
-//     options: {           
+//     options: {
 //         encrypt: false,
-//         enableArithAbort:true
+//         enableArithAbort: true
 //     },
 //     pool: {
 //         max: 100,
@@ -102,30 +102,30 @@ router.get('/', function (req, res) {
 });
 
 app.get('/home', function (req, res) {
-    console.log('home');
+    //console.log('home');
     res.render('index.html');
     //res.sendFile('index.html', {root : __dirname });
 });
 
 
 app.get('/flashmsg', function (req, res) {
-    console.log('flashmsg');
+    //console.log('flashmsg');
     res.render('flashmsg.html');
     //res.sendFile('index.html', {root : __dirname });
 });
 
 app.get('/luckydraw', function (req, res) {
-    console.log('lottery');
+    //console.log('lottery');
     res.render('lottery.html');
     //res.sendFile('index.html', {root : __dirname });
 });
 app.get('/home1', function (req, res) {
-    console.log('home1');
+    //console.log('home1');
     res.render('home.html');
     //res.sendFile('index.html', {root : __dirname });
 });
 app.get('/alert', function (req, res) {
-    console.log('alert');
+    //console.log('alert');
     res.render('alert.html');
     //res.sendFile('index.html', {root : __dirname });
 });
@@ -140,7 +140,7 @@ var ObjectID = require('mongodb').ObjectID;
 //         throw err;
 //     }
 
-//     console.log('MongoDB connected...');
+//     //console.log('MongoDB connected...');
 
 //     // Connect to Socket.io
 //     client.on('connection', function(socket){
@@ -153,19 +153,19 @@ var ObjectID = require('mongodb').ObjectID;
 
 //         socket.on('GetMyData', function(data){
 //             //let name = data.UserID;
-//             console.log(data);
+//             //console.log(data);
 //             var _date=new Date();
 //             _date.setDate(_date.getMinutes()-120);
 //            // _date = parseString(_date);
 //             var _strDate=_date.toString();
 //             // ,ts:{$gt:_strDate}
 //             var query = {uid: data.eid, read:false};
-//             console.log(query);
+//             //console.log(query);
 //             chat.find(query).limit(100).sort({_id:1}).toArray(function(err, res){
 //                 if(err){
 //                     throw err;
 //                 }
-//                 console.log(res);
+//                 //console.log(res);
 //                 // Emit the messages
 //                 socket.emit('output', res);
 //             });
@@ -182,125 +182,147 @@ var ObjectID = require('mongodb').ObjectID;
 //             //     }
 //             // );
 //             try{
-//                 //console.log(data._id);
+//                 ////console.log(data._id);
 //             chat.update({ '_id' :ObjectID( data._id) },{$set : { 'read':true,'ld': new Date(),'uby':req.body.uby  }},function(err, res){
 //                 if(err){
-//                     console.log(res);
+//                     //console.log(res);
 //                 }
-//                 //console.log(res);
-//                 // console.log(res);
+//                 ////console.log(res);
+//                 // //console.log(res);
 //                 // // Emit the messages
 //                 // socket.emit('output', res);
 //             });
 //         }
-//         catch(e){console.log(e);  }
+//         catch(e){//console.log(e);  }
 //         });
 //     });
 // });
 
+function fnKeepLog(_service, _body, _method, _res, _status, _error) {
+    mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3',
+        function (err, db) {
+            var chat = db.collection('ServiceLog');
+            var _cd = new Date();
+            var _jsonBody = { service: _service, body: _body, method: _method, res: {msg:_res}, status: _status, error: {msg:_error}, cd: _cd };
 
 
-router.route('/DBCHK')
 
-    .post(function (req, res) {
 
-        res.json({ message: 'false', data: "" });
-    });
+            chat.insert(_jsonBody, function () {
+            });
+        });
+}
 
 
 
 router.route('/StartLuckydraw')
     .post(function (req, res) {
-
+        //console.log(req);
+        var _service = req.originalUrl, _body = req.body, _method = req.method, _res, _status , _error;
+        //fnKeepLog(_service, _body, _method, _res, _status, _error)
         var _agent = [];
         var dbConn = new sql.ConnectionPool(msconfig);
-        dbConn.connect().then(function () {
-            var request = new sql.Request(dbConn);
-            request.input('ProductID', sql.Int, req.body.pid).input('Type', sql.Int, 1).
-            input('ContestType', sql.Int, req.body.ctype)
-                .execute("mtx.UpdateContestDetails").then(function (recordSet) {
-                    //console.log(recordSet.recordset);
-                    _agent = recordSet.recordset;
+        try {
+            dbConn.connect().then(function () {
+                var request = new sql.Request(dbConn);
+                request.input('ProductID', sql.Int, req.body.pid).input('Type', sql.Int, 1).
+                    input('ContestType', sql.Int, req.body.ctype)
+                    .execute("mtx.UpdateContestDetails").then(function (recordSet) {
+                        ////console.log(recordSet.recordset);
+                        _agent = recordSet.recordset;
+                        if (_agent.length > 0 && _agent.length > req.body.size) {
+                            dbConn.close();
+                            var size, lowest, highest;
+                            size = req.body.size;
+                            lowest = 0;
+                            //highest=req.body.highest;
 
-                    dbConn.close();
-                    var size, lowest, highest;
-                    size = req.body.size;
-                    lowest = 0;
-                    //highest=req.body.highest;
+                            highest = recordSet.recordset.length - 1;
 
-                    highest = recordSet.recordset.length - 1;
-
-                    var numbers = [];
-                    for (var i = 0; i < size; i++) {
-                        var add = true;
-                        var randomNumber = Math.floor(Math.random() * highest) + 1;
-                        for (var y = 0; y < highest; y++) {
-                            if (numbers[y] == randomNumber) {
-                                add = false;
+                            var numbers = [];
+                            for (var i = 0; i < size; i++) {
+                                var add = true;
+                                var randomNumber = Math.floor(Math.random() * highest) + 1;
+                                for (var y = 0; y < highest; y++) {
+                                    if (numbers[y] == randomNumber) {
+                                        add = false;
+                                    }
+                                }
+                                if (add) {
+                                    numbers.push(randomNumber);
+                                } else {
+                                    i--;
+                                }
                             }
-                        }
-                        if (add) {
-                            numbers.push(randomNumber);
-                        } else {
-                            i--;
-                        }
-                    }
 
-                    var highestNumber = 0;
-                    for (var m = 0; m < numbers.length; m++) {
-                        for (var n = m + 1; n < numbers.length; n++) {
-                            if (numbers[n] < numbers[m]) {
-                                highestNumber = numbers[m];
-                                numbers[m] = numbers[n];
-                                numbers[n] = highestNumber;
+                            var highestNumber = 0;
+                            for (var m = 0; m < numbers.length; m++) {
+                                for (var n = m + 1; n < numbers.length; n++) {
+                                    if (numbers[n] < numbers[m]) {
+                                        highestNumber = numbers[m];
+                                        numbers[m] = numbers[n];
+                                        numbers[n] = highestNumber;
+                                    }
+                                }
                             }
-                        }
-                    }
 
 
-                    var _result = [];
-                    var xmldata = '<xml>';//<agent Sno="" EmpID="" /> </xml>;
-                    numbers.forEach(element => {
-                        _result.push(_agent[element]);
-                        xmldata = xmldata + '<agent Sno="' + _agent[element].Sno + '" EmpID="' + _agent[element].EmpID + '" />'
-                    });
-                    xmldata = xmldata + '</xml>';
-
-                    var dbConnUpdate = new sql.ConnectionPool(msconfig);
-                    dbConnUpdate.connect().then(function () {
-
-                        var requestUpdate = new sql.Request(dbConnUpdate);
-                        requestUpdate.input('ProductID', sql.Int, req.body.pid)
-                            .input('Type', sql.Int, 2)
-                            .input('ContestType', sql.Int, req.body.ctype)
-                            .input('xml', sql.Xml, xmldata)
-                            .execute("mtx.UpdateContestDetails").then(function (recordSet) {
+                            var _result = [];
+                            var xmldata = '<xml>';//<agent Sno="" EmpID="" /> </xml>;
+                            numbers.forEach(element => {
+                                _result.push(_agent[element]);
+                                xmldata = xmldata + '<agent Sno="' + _agent[element].Sno + '" EmpID="' + _agent[element].EmpID + '" />'
                             });
+                            xmldata = xmldata + '</xml>';
+
+                            var dbConnUpdate = new sql.ConnectionPool(msconfig);
+                            dbConnUpdate.connect().then(function () {
+
+                                var requestUpdate = new sql.Request(dbConnUpdate);
+                                requestUpdate.input('ProductID', sql.Int, req.body.pid)
+                                    .input('Type', sql.Int, 2)
+                                    .input('ContestType', sql.Int, req.body.ctype)
+                                    .input('xml', sql.Xml, xmldata)
+                                    .execute("mtx.UpdateContestDetails").then(function (recordSet) {
+                                    });
+
+                            });
+                            var _emitRes = { "Lucky": _result, "AllUser": _agent, "ctype": req.body.ctype };
+                            client.emit('luckynumber', _emitRes);
+
+                            //console.log(xmldata);
+                            _res=_result;
+                            _status=true;
+                            res.json({ message: 'true', data: _result });
+                        }
+                        else {
+                            _res = {};
+                            _status=false;
+                            _error.msg = "No record or Number of employee is less no. of winner" ;
+                            //console.log(_error);
+                            fnKeepLog(_service, _body, _method, _res, _status, _error);
+                            res.json({ message: 'false', data: "No record or Number of employee is less no. of winner" });
+                        }
+                    }).catch(function (err) {
+                        //console.log(err);
+                        _status=false;
+                        dbConn.close();
+                        _error = err;
+                        fnKeepLog(_service, _body, _method, _res, _status, _error);
+                        res.json({ message: 'false', data: err });
 
                     });
-                    var _emitRes = { "Lucky": _result, "AllUser": _agent ,"ctype":req.body.ctype};
-                    client.emit('luckynumber', _emitRes);
-
-                    console.log(xmldata);
-
-                    res.json({ message: 'true', data: _result });
-                }).catch(function (err) {
-                    console.log(err);
-                    dbConn.close();
-                    res.json({ message: 'false', data: err });
-                });
-        }).catch(function (err) {
-            console.log(err);
-            res.json({ message: 'false', data: err });
-        });
-
-        console.log(_agent);
-        // for(var i = 0; i < 500; i++) {
-        //     _agent.push({'Sno':i,'Name':'user '+i})
-        // }
-
-
-
+            });
+        } 
+        catch (error) {
+            _error = error;
+            _status=false;
+            fnKeepLog(_service, _body, _method, _res, _status, _error);
+            res.json({ message: 'false', data: error });
+        }
+        finally {
+            //fnKeepLog(_service, _body, _method, _res, _status, _error);
+        }
 
     });
 
@@ -350,7 +372,7 @@ router.route('/MarkRead')
                 });
             }
             catch (e) { console.log(e); }
-        });
+            });
 
         res.json({ message: 'true' });
 
@@ -394,7 +416,7 @@ router.route('/GetAllDataByUserID')
             var chat = db.collection('Notification');
 
             var query = { uid: data.eid };
-            console.log(query);
+            //console.log(query);
             chat.find(query).limit(100).sort({ cd: -1 }).toArray(function (err, res) {
                 if (err) {
                     throw err;
@@ -415,12 +437,12 @@ router.route('/MarkTicketAsRead')
             try {
                 chat.update({ '_id': ObjectID(req.body._id) }, { $set: { 'read': true, 'ld': new Date(), 'uby': req.body.uby } }, function (err, res) {
                     if (err) {
-                        console.log(res);
+                        //console.log(res);
                     }
                 });
             }
             catch (e) { console.log(e); }
-        });
+            });
 
         res.json({ message: 'true' });
 
