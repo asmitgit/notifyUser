@@ -199,6 +199,7 @@ var ObjectID = require('mongodb').ObjectID;
 // });
 
 function fnKeepLog(_service, _body, _method, _res, _status, _error) {
+    try{
     mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3',
         function (err, db) {
             var chat = db.collection('ServiceLog');
@@ -211,6 +212,9 @@ function fnKeepLog(_service, _body, _method, _res, _status, _error) {
             chat.insert(_jsonBody, function () {
             });
         });
+    }catch(err){
+        console.log(err);
+    }
 }
 
 
