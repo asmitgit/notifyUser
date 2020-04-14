@@ -38,7 +38,7 @@
 
     <div id="lucky_draw" class="lucky_draw" style="display: none;">
         <div class="box_animation">
-                <span id="spText" class="top_heading">Congratulations winners for yesterday!</span>
+            <span id="spText" class="top_heading">Congratulations winners for yesterday!</span>
 
             <ul class="winner_list" id="ulData">
                 <!-- <li><span>Asmit 4 (BP00115)</span></li>
@@ -48,7 +48,7 @@
             </ul>
             <img src="../content/img/box3.gif" id="gifImg" class="animation_img">
 
-            <span  class="bottom_heading">Didn't win? Try again, good luck! &#128522;</span>
+            <span class="bottom_heading">Didn't win? Try again, good luck! &#128522;</span>
             <a href="#" class="close-btnn" onclick="MarkRead(2)">x</a>
         </div>
 
@@ -98,20 +98,27 @@
             socket.on('luckynumber', function (data) {
                 $("#ulData").hide();
                 _count = 0;
-                data.AllUser.forEach(element => {
-                    if (element.EmpID == getUrlVars()["eid"]) {
-                        _count = _count + 1;
+                //if(getUrlVars()["prd"].split(',').includes(data.pid)){
+                if (getUrlVars()["prd"].split(',').includes((data.pid).toString())) {
+                    _count = 1;
+                }
 
-                    }
-                });
+
+                // data.AllUser.forEach(element => {
+                //     if (element.EmpID == getUrlVars()["eid"]) {
+                //         _count = _count + 1;
+
+                //     }
+                // });
+
 
                 if (_count > 0) {
                     var obj = {
                         msg: "NewPushMsg",
                         paramters: _count
                     };
-                    $("#gifImg").attr("src","");
-                    $("#gifImg").attr("src","../content/img/box3.gif");
+                    $("#gifImg").attr("src", "");
+                    $("#gifImg").attr("src", "../content/img/box3.gif");
                     window.parent.postMessage(obj, "*");
 
                     if (data.Lucky.length > 0) {
@@ -126,20 +133,20 @@
                         $("#celebration_container").hide();
                         $("#lucky_draw").show();
                         setTimeout(function () {
-                             $('#ulData').html(_data);
-                             if(data.ctype==1){
-                             $('#spText').html("Congratulations winners for yesterday!");
-                             }
-                             else if(data.ctype==2){
-                             $('#spText').html("Congratulations winners for last week!");
-                             }
-                              console.log(_data); 
-                              $("#ulData").show(2000);
-                             }, 3500);
+                            $('#ulData').html(_data);
+                            if (data.ctype == 1) {
+                                $('#spText').html("Congratulations winners for yesterday!");
+                            }
+                            else if (data.ctype == 2) {
+                                $('#spText').html("Congratulations winners for last week!");
+                            }
+                            console.log(_data);
+                            $("#ulData").show(2000);
+                        }, 3500);
 
-                             setTimeout(function () {
-                                MarkRead(2);                             
-                             }, 30000);
+                        setTimeout(function () {
+                            MarkRead(2);
+                        }, 30000);
                         //$('#ulData').html(_data)  ;
                     }
                 }

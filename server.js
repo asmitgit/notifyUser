@@ -199,30 +199,91 @@ var ObjectID = require('mongodb').ObjectID;
 // });
 
 function fnKeepLog(_service, _body, _method, _res, _status, _error) {
-    try{
-    mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3',
-        function (err, db) {
-            var chat = db.collection('ServiceLog');
-            var _cd = new Date();
-            var _jsonBody = { service: _service, body: _body, method: _method, res: {msg:_res}, status: _status, error: {msg:_error}, cd: _cd };
+    try {
+        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3',
+            function (err, db) {
+                var chat = db.collection('ServiceLog');
+                var _cd = new Date();
+                var _jsonBody = { service: _service, body: _body, method: _method, res: { msg: _res }, status: _status, error: { msg: _error }, cd: _cd };
 
 
 
 
-            chat.insert(_jsonBody, function () {
+                chat.insert(_jsonBody, function () {
+                });
             });
-        });
-    }catch(err){
+    } catch (err) {
         console.log(err);
     }
 }
 
 
 
+router.route('/TestRandom')
+    .post(function (req, res) {
+        console.log(1);
+        var size, lowest, highest;
+        size = req.body.size;
+        lowest = 0;
+        highest = req.body.highest;
+
+        var numbers = [];
+        var resnumbers = [];
+
+        var _rem = highest % size;
+        var _fac = highest / size;
+
+
+        var _fr = 0, _to = _fac;
+
+        _rem = 0
+
+        for (var j = 0; j < size; j++) {
+
+            _fr = j * _fac, _to = (j + 1) * _fac;
+
+            if (j + 1 == size) {
+                _to = _rem + _to;
+            }
+            for (var i = _fr; i < _to; i++) {
+                var add = true;
+                var randomNumber = Math.floor(Math.random() * highest) + 1;
+                for (var y = 0; y < highest; y++) {
+                    if (numbers[y] == randomNumber) {
+                        add = false;
+                    }
+                }
+                if (add) {
+                    numbers.push(randomNumber);
+                } else {
+                    i--;
+                }
+            }
+
+            var highestNumber = 0;
+            for (var m = 0; m < numbers.length; m++) {
+                for (var n = m + 1; n < numbers.length; n++) {
+                    if (numbers[n] < numbers[m]) {
+                        highestNumber = numbers[m];
+                        numbers[m] = numbers[n];
+                        numbers[n] = highestNumber;
+                    }
+                }
+            }
+            resnumbers = resnumbers.concat(highestNumber);
+
+        }
+
+
+
+
+        res.json({ message: 'true', data: numbers });
+
+    });
 router.route('/StartLuckydraw')
     .post(function (req, res) {
         //console.log(req);
-        var _service = req.originalUrl, _body = req.body, _method = req.method, _res, _status , _error;
+        var _service = req.originalUrl, _body = req.body, _method = req.method, _res, _status, _error;
         //fnKeepLog(_service, _body, _method, _res, _status, _error)
         var _agent = [];
         var dbConn = new sql.ConnectionPool(msconfig);
@@ -236,6 +297,7 @@ router.route('/StartLuckydraw')
                         _agent = recordSet.recordset;
                         if (_agent.length > 0 && _agent.length > req.body.size) {
                             dbConn.close();
+
                             var size, lowest, highest;
                             size = req.body.size;
                             lowest = 0;
@@ -291,25 +353,28 @@ router.route('/StartLuckydraw')
                                     });
 
                             });
-                            var _emitRes = { "Lucky": _result, "AllUser": _agent, "ctype": req.body.ctype };
+                            var _emitRes = { "Lucky": _result, "AllUser": _agent, "ctype": req.body.ctype,"pid":req.body.pid };
                             client.emit('luckynumber', _emitRes);
 
                             //console.log(xmldata);
-                            _res=_result;
-                            _status=true;
+                            _res = _result;
+                            _status = true;
+                            _error.msg = "no error";
+                            fnKeepLog(_service, _body, _method, _res, _status, _error);
                             res.json({ message: 'true', data: _result });
                         }
                         else {
                             _res = {};
-                            _status=false;
-                            _error.msg = "No record or Number of employee is less no. of winner" ;
+                            _status = false;
+                            _error.msg = "No record or Number of employee is less no. of winner";
                             //console.log(_error);
                             fnKeepLog(_service, _body, _method, _res, _status, _error);
+
                             res.json({ message: 'false', data: "No record or Number of employee is less no. of winner" });
                         }
                     }).catch(function (err) {
                         //console.log(err);
-                        _status=false;
+                        _status = false;
                         dbConn.close();
                         _error = err;
                         fnKeepLog(_service, _body, _method, _res, _status, _error);
@@ -317,10 +382,10 @@ router.route('/StartLuckydraw')
 
                     });
             });
-        } 
+        }
         catch (error) {
             _error = error;
-            _status=false;
+            _status = false;
             fnKeepLog(_service, _body, _method, _res, _status, _error);
             res.json({ message: 'false', data: error });
         }
@@ -376,7 +441,7 @@ router.route('/MarkRead')
                 });
             }
             catch (e) { console.log(e); }
-            });
+        });
 
         res.json({ message: 'true' });
 
@@ -446,7 +511,7 @@ router.route('/MarkTicketAsRead')
                 });
             }
             catch (e) { console.log(e); }
-            });
+        });
 
         res.json({ message: 'true' });
 
