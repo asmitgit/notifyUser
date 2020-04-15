@@ -204,11 +204,7 @@ function fnKeepLog(_service, _body, _method, _res, _status, _error) {
             function (err, db) {
                 var chat = db.collection('ServiceLog');
                 var _cd = new Date();
-                var _jsonBody = { service: _service, body: _body, method: _method, res: { msg: _res }, status: _status, error: { msg: _error }, cd: _cd };
-
-
-
-
+                var _jsonBody = { service: _service, body: _body, method: _method, res: _res, status: _status, error: _error, cd: _cd };
                 chat.insert(_jsonBody, function () {
                 });
             });
@@ -353,22 +349,18 @@ router.route('/StartLuckydraw')
                                     });
 
                             });
-                            var _emitRes = { "Lucky": _result, "AllUser": _agent, "ctype": req.body.ctype,"pid":req.body.pid };
+                            var _emitRes = { "Lucky": _result, "AllUser": _agent, "ctype": req.body.ctype, "pid": req.body.pid };
                             client.emit('luckynumber', _emitRes);
 
-                            //console.log(xmldata);
-                            _res = _result;
-                            _status = true;
-                            _error.msg = "no error";
-                            fnKeepLog(_service, _body, _method, _res, _status, _error);
+                            fnKeepLog(_service, _body, _method, _result, true, { msg: "no error" });
                             res.json({ message: 'true', data: _result });
                         }
                         else {
                             _res = {};
                             _status = false;
-                            _error.msg = "No record or Number of employee is less no. of winner";
+                            //_error.msg = "No record or Number of employee is less no. of winner";
                             //console.log(_error);
-                            fnKeepLog(_service, _body, _method, _res, _status, _error);
+                            fnKeepLog(_service, _body, _method, {}, false, { msg: "No record or Number of employee is less no. of winner" });
 
                             res.json({ message: 'false', data: "No record or Number of employee is less no. of winner" });
                         }
@@ -376,8 +368,8 @@ router.route('/StartLuckydraw')
                         //console.log(err);
                         _status = false;
                         dbConn.close();
-                        _error = err;
-                        fnKeepLog(_service, _body, _method, _res, _status, _error);
+                        fnKeepLog(_service, _body, _method, {}, false, { msg: err });
+
                         res.json({ message: 'false', data: err });
 
                     });
@@ -399,25 +391,33 @@ router.route('/AddNewMsg')
 
     .post(function (req, res) {
 
-        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3', function (err, db) {
+        mongo.connect('mongodb://ticketSystemUser:tIcKet1L5j8A7N@10.80.30.186:27017,10.80.40.253:27017,10.80.30.187:27017/TicketSystem?readPreference=secondaryPreferred;replicaSet=rs3',
+            function (err, db) {
 
 
-            var chat = db.collection('PushMessage');
+                var chat = db.collection('PushMessage');
 
-            req.body.forEach(element => {
-                element.cd = new Date();
-                element.ld = new Date();
-                element.uby = 0;
+                req.body.forEach(element => {
+                    element.cd = new Date();
+                    element.ld = new Date();
+                    element.uby = 0;
+
+                });
+
+
+                chat.insert(req.body, function () {
+                    if (req.body[0].type == 1) {
+                        client.emit('newmessage', req.body);
+                    }
+                    if (req.body[0].type == 2) {
+                        client.emit('bmsAgentAlert', req.body);
+                    }
+
+                });
+
+
+
             });
-
-            chat.insert(req.body, function () {
-                client.emit('newmessage', req.body);
-
-            });
-
-
-
-        });
 
 
         res.json({ message: 'true' });
