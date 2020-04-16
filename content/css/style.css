@@ -126,18 +126,16 @@ img{max-width: 100%;}
 }
 
 
-.box_animation_bell{   width: 480px;
+.box_animation_bell{    width: 480px;
   height: auto;
   margin: 0 auto;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   background: #f4f9fe;
-  position: fixed;
+  position: relative;
   border: 10px solid #ced8e2;
   border-radius: 10px;
-  margin-top: 5%;
-  bottom: 13px;
-  right: 30px;}
+  margin-top: 5%;}
   .animation_img{
      }
   
