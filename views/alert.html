@@ -60,6 +60,45 @@
 
     </div>
 
+    <div class="box_animation_bell" id="box_animation_bell" style="display: none;"><img
+            src="../content/img/bell-animation.gif">
+
+        <a href="#" class="close-btn_bell" onclick="MarkRead(1);">x</a>
+        <div id="divbmsalert"></div>
+        <!-- <p class="content">Oops! You did not meet the productivity criteria for the last 2 hours. You need to pick up
+            pace.</p>
+        <p class="content">Your hourly abandon rate is x%. </p>
+
+        <p class="content">Your total talktime for the past 2 hours is x mins. </p>
+
+        <div class="supervisor_data">
+            <p class="content">The following agents did not meet their productivity criteria for the past 2 hours. </p>
+            <ul class="agent_list">
+                <li><label>Agent name 1</label><span>(ecode)</span></li>
+                <li><label>Agent name 1</label><span>(ecode)</span></li>
+                <li><label>Agent name 1</label><span>(ecode)</span></li>
+                <li><label>Agent name 1</label><span>(ecode)</span></li>
+            </ul>
+
+        </div>
+
+        <p class="content">The hourly abandon rate for your team is x%. </p>
+        <p class="content">The total talktime for your team in the past 2 hours is x mins.</p>
+
+
+        <div class="supervisor_data">
+            <p class="content">The following agents logged in late today</p>
+            <ul class="agent_list">
+                <li><label>Agent name 1</label><span>(ecode)</span></li>
+                <li><label>Agent name 1</label><span>(ecode)</span></li>
+                <li><label>Agent name 1</label><span>(ecode)</span></li>
+                <li><label>Agent name 1</label><span>(ecode)</span></li>
+            </ul>
+
+        </div> -->
+
+
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="../content/JS/script.js"></script>
 
@@ -132,6 +171,7 @@
                         }
                         $("#celebration_container").hide();
                         $("#lucky_draw").show();
+                        $("#box_animation_bell").hide();
                         setTimeout(function () {
                             $('#ulData').html(_data);
                             if (data.ctype == 1) {
@@ -163,10 +203,42 @@
                         if (data[x].uid == getUrlVars()["eid"]) {
                             _count = _count + 1;
                             _objID = data[x]._id;
+                            $('#divbmsalert').html(data[x].msg);
+
+
+                            $("#celebration_container").show();
+                            $("#lucky_draw").hide();
+                            $("#box_animation_bell").hide();
+                        }
+                    }
+
+                    if (_count > 0) {
+                        var obj = {
+                            msg: "NewPushMsg",
+                            paramters: _count
+                        };
+                        window.parent.postMessage(obj, "*");
+                    }
+
+                }
+            });
+
+            socket.on('bmsAgentAlert', function (data) {
+                _count = 0;
+                if (data.length > 0) {
+
+
+                    for (var x = 0; x < data.length; x++) {
+                        // Build out message div
+
+                        if (data[x].uid == getUrlVars()["eid"]) {
+                            _count = _count + 1;
+                            _objID = data[x]._id;
                             $('#lblLeadID').html(data[x].lid);
                             $('#lblCustName').html(data[x].cname);
 
-                            $("#celebration_container").show();
+                            $("#box_animation_bell").show();
+                            $("#celebration_container").hide();
                             $("#lucky_draw").hide();
                         }
                     }
@@ -186,6 +258,9 @@
 
         function MarkRead(pageType) {
 
+            $("#celebration_container").hide();
+            $("#lucky_draw").hide();
+            $("#box_animation_bell").hide();
             if (pageType == 1) {
                 try {
 

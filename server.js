@@ -396,20 +396,22 @@ router.route('/AddNewMsg')
 
 
                 var chat = db.collection('PushMessage');
-
+                var _type = 0;
                 req.body.forEach(element => {
                     element.cd = new Date();
                     element.ld = new Date();
                     element.uby = 0;
-
+                    _type = element.type;
                 });
 
 
                 chat.insert(req.body, function () {
-                    if (req.body[0].type == 1) {
+                    if (_type == 1) {
+                        console.log('newmessage');
                         client.emit('newmessage', req.body);
                     }
-                    if (req.body[0].type == 2) {
+                    if (_type == 2) {
+                        console.log('bmsAgentAlert');
                         client.emit('bmsAgentAlert', req.body);
                     }
 

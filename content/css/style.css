@@ -124,3 +124,47 @@ img{max-width: 100%;}
 }
 .close_btn{    padding: 6px 11px;    font-size: 19px;}
 }
+
+
+.box_animation_bell{    width: 480px;
+  height: auto;
+  margin: 0 auto;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  background: #f4f9fe;
+  position: relative;
+  border: 10px solid #ced8e2;
+  border-radius: 10px;
+  margin-top: 5%;}
+  .animation_img{
+     }
+  
+  .close-btn_bell{  position: absolute;
+  top: -17px;
+  font-size: 28px;
+  text-decoration: none;
+  color: #83a0bd;
+  background: #f4f9fe;
+  border-radius: 100%;
+  height: 40px;
+  width: 40px;
+  right: -30px;
+  border: 4px solid #ced8e2;
+  text-align: center;
+  line-height: 34px;}
+  
+  .content{    color: #0989a7;
+  font-size: 18px;
+  padding:10px 20px 20px 20px;
+  margin: 0;}
+  .supervisor_data{     display: block;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;}
+  ul.agent_list{ display: table; width: 100%; padding: 0; margin: 0;}
+  ul.agent_list li{ display: inline-block;
+  width: 48%;
+  padding: 0 5px 5px 0;
+  margin: 0;
+  color: #121f31;
+  font-size: 14px;}
