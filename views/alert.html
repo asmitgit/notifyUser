@@ -203,7 +203,9 @@
                         if (data[x].uid == getUrlVars()["eid"]) {
                             _count = _count + 1;
                             _objID = data[x]._id;
-                            $('#divbmsalert').html(data[x].msg);
+                            //$('#divbmsalert').html(data[x].msg);
+                            $('#lblLeadID').html(data[x].lid);
+                            $('#lblCustName').html(data[x].cname);
 
 
                             $("#celebration_container").show();
@@ -234,9 +236,8 @@
                         if (data[x].uid == getUrlVars()["eid"]) {
                             _count = _count + 1;
                             _objID = data[x]._id;
-                            $('#lblLeadID').html(data[x].lid);
-                            $('#lblCustName').html(data[x].cname);
-
+                           
+                            $('#divbmsalert').html(data[x].msg);
                             $("#box_animation_bell").show();
                             $("#celebration_container").hide();
                             $("#lucky_draw").hide();
