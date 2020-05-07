@@ -60,48 +60,27 @@
 
     </div>
 
-    <div class="box_animation_bell" id="box_animation_bell" style="display: none;"><img
-            src="../content/img/bell-animation.gif">
-
-        <a href="#" class="close-btn_bell" onclick="MarkRead(1);">x</a>
-        <div id="divbmsalert"></div>
-        <!-- <p class="content">Oops! You did not meet the productivity criteria for the last 2 hours. You need to pick up
-            pace.</p>
-        <p class="content">Your hourly abandon rate is x%. </p>
-
-        <p class="content">Your total talktime for the past 2 hours is x mins. </p>
-
-        <div class="supervisor_data">
-            <p class="content">The following agents did not meet their productivity criteria for the past 2 hours. </p>
-            <ul class="agent_list">
-                <li><label>Agent name 1</label><span>(ecode)</span></li>
-                <li><label>Agent name 1</label><span>(ecode)</span></li>
-                <li><label>Agent name 1</label><span>(ecode)</span></li>
-                <li><label>Agent name 1</label><span>(ecode)</span></li>
-            </ul>
-
-        </div>
-
-        <p class="content">The hourly abandon rate for your team is x%. </p>
-        <p class="content">The total talktime for your team in the past 2 hours is x mins.</p>
 
 
-        <div class="supervisor_data">
-            <p class="content">The following agents logged in late today</p>
-            <ul class="agent_list">
-                <li><label>Agent name 1</label><span>(ecode)</span></li>
-                <li><label>Agent name 1</label><span>(ecode)</span></li>
-                <li><label>Agent name 1</label><span>(ecode)</span></li>
-                <li><label>Agent name 1</label><span>(ecode)</span></li>
-            </ul>
+    <div id="box_animation_bell" style="display: none;">
+        <!-- <div class="box_animation_bell notification_1" id="notification_1">
+
+            <div class="date_time_hd" id="datetime">6/5/2020 14:20 PM</div>
+            <a href="#"><img src="../content/img/bell-animation.gif"></a>
+
+            <a href="#" class="close-btn_bell" onclick="MarkReadMultAlert(1);">x</a>
+            <div id="divbmsalert"></div>
+
+
 
         </div> -->
 
 
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="../content/JS/script.js"></script>
-
+    <script src="../content/JS/datetimeformat.js"></script>
 
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -129,7 +108,7 @@
 
 
             // Connect to socket.io
-            var socket = io.connect('https://qanotificationsocket.policybazaar.com/');
+            var socket = io.connect('https://notificationsocket.policybazaar.com/');
             //var socket = io.connect('http://localhost:4000/');
 
             var _count = 0;
@@ -224,20 +203,36 @@
 
                 }
             });
-
+            var _alertCount = 0;
             socket.on('bmsAgentAlert', function (data) {
                 _count = 0;
                 if (data.length > 0) {
 
+                    var currentdate = new Date();
+                    var datetime = dateFormat(new Date(), "dddd, mmmm dS, yyyy, h:MM:ss TT");
 
                     for (var x = 0; x < data.length; x++) {
                         // Build out message div
 
-                        if (data[x].uid == getUrlVars()["eid"]) {
+                        if (data[x].uid == getUrlVars()["eid"] && _alertCount < 10) {
                             _count = _count + 1;
                             _objID = data[x]._id;
-                           
-                            $('#divbmsalert').html(data[x].msg);
+                            _alertCount = _alertCount + 1;
+                            var _onclick = "MarkReadMultAlert(" + _alertCount + ",'" + data[x]._id + "');"
+                            var _html = '<div class="box_animation_bell notification_' + _alertCount + '" id="notification_' + _alertCount + '">' +
+
+                                '<div class="date_time_hd" id="datetime">' + datetime + ' </div>' +
+                                '<a href="' + data[x].url + '"><img src="../content/img/bell-animation.gif"></a>' +
+
+                                '<a href="javascript:void(0);" class="close-btn_bell" onclick="' + _onclick + '">x</a>' +
+                                '<div id="divbmsalert">' + data[x].msg + '</div>' +
+                                '</div>';
+
+                            if (_alertCount > 1) {
+                                _html = $('#box_animation_bell').html() + _html;
+                            }
+                            $('#box_animation_bell').html(_html);
+
                             $("#box_animation_bell").show();
                             $("#celebration_container").hide();
                             $("#lucky_draw").hide();
@@ -297,6 +292,52 @@
         }
 
 
+
+        function MarkReadMultAlert(alertid, _MID) {
+            console.log(_MID, alertid);
+            try {
+
+                $.ajax({
+                    url: "https://qanotification.policybazaar.com/api/MarkRead",
+                    type: "POST",
+                    data: {
+                        _id: _MID,
+                        uby: getUrlVars()["eid"]
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                        var obj = {
+                            msg: "Remove",
+                            paramters: 1
+                        };
+                        window.parent.postMessage(obj, "*");
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    }
+                });
+            }
+            catch (err) { }
+            if (alertid == 1) {
+
+                $("#celebration_container").hide();
+                $("#lucky_draw").hide();
+                $("#box_animation_bell").hide();
+                $('#box_animation_bell').html('');
+                _alertCount = 0;
+                var obj = {
+                    msg: "Remove",
+                    paramters: 1
+                };
+                window.parent.postMessage(obj, "*");
+            }
+            else {
+
+                var _aid = "#notification_" + alertid;
+                $(_aid).hide();
+
+
+            }
+        }
 
     </script>
 </body>

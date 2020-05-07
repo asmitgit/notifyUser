@@ -134,9 +134,9 @@ img{max-width: 100%;}
   background: #f4f9fe;
   position: relative;
   border: 10px solid #ced8e2;
-  border-radius: 10px;
+  border-radius: 10px; position: absolute;
   margin-top:2%;}
-  .animation_img{
+  .animation_img{ border:0;
      }
   
   .close-btn_bell{  position: absolute;
@@ -176,3 +176,20 @@ img{max-width: 100%;}
   margin: 0;
   color: #121f31;
   font-size: 13px;}
+  
+  .date_time_hd{background: #ced8e2;display:block;width: 100%;top: 0;z-index: 99999999999;text-align: center;font-size: 14px;padding: 0 0 4px 0;font-weight: bold }
+  img{border:0;}
+
+  .notification_1{margin-top: 2%; }
+.notification_2{margin-top: 10%; margin-left: 8%;}
+.notification_3{margin-top: 18%; margin-left: 15%;}
+.notification_4{margin-top: 26%; margin-left: 22%;}
+.notification_5{margin-top: 34%; margin-left: 29%;}
+.notification_6{margin-top: 42%; margin-left: 36%;}
+.notification_7{margin-top: 50%;margin-left: 43%;}
+.notification_8{margin-top: 64%;margin-left: 50%; }
+.notification_9{margin-top: 68%;margin-left: 57%;}
+.notification_10{margin-top: 66%;margin-left: 64%;}
+
+#box_animation_bell{ position:relative;margin: 0 auto;width: 400px;}
+
