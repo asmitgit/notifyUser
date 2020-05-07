@@ -204,6 +204,7 @@
                 }
             });
             var _alertCount = 0;
+            var _closeCount = 0;
             socket.on('bmsAgentAlert', function (data) {
                 _count = 0;
                 if (data.length > 0) {
@@ -218,6 +219,7 @@
                             _count = _count + 1;
                             _objID = data[x]._id;
                             _alertCount = _alertCount + 1;
+                            _closeCount = _closeCount + 1;
                             var _onclick = "MarkReadMultAlert(" + _alertCount + ",'" + data[x]._id + "');"
                             var _html = '<div class="box_animation_bell notification_' + _alertCount + '" id="notification_' + _alertCount + '">' +
 
@@ -294,6 +296,7 @@
 
 
         function MarkReadMultAlert(alertid, _MID) {
+            _closeCount = _closeCount - 1;
             console.log(_MID, alertid);
             try {
 
@@ -306,18 +309,20 @@
                     },
                     dataType: "json",
                     success: function (result) {
-                        var obj = {
-                            msg: "Remove",
-                            paramters: 1
-                        };
-                        window.parent.postMessage(obj, "*");
+                        // var obj = {
+                        //     msg: "Remove",
+                        //     paramters: 1
+                        // };
+                        // window.parent.postMessage(obj, "*");
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                     }
                 });
             }
             catch (err) { }
-            if (alertid == 1) {
+            var _aid = "#notification_" + alertid;
+            $(_aid).hide();
+            if (_closeCount == 0) {
 
                 $("#celebration_container").hide();
                 $("#lucky_draw").hide();
@@ -329,14 +334,12 @@
                     paramters: 1
                 };
                 window.parent.postMessage(obj, "*");
-            }
-            else {
-
-                var _aid = "#notification_" + alertid;
-                $(_aid).hide();
-
 
             }
+
+
+
+
         }
 
     </script>
