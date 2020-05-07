@@ -103,7 +103,8 @@
             }
             catch (err) { }
         }
-
+        var _alertCount = 0;
+        var _closeCount = 0;
         (function () {
 
 
@@ -203,8 +204,7 @@
 
                 }
             });
-            var _alertCount = 0;
-            var _closeCount = 0;
+           
             socket.on('bmsAgentAlert', function (data) {
                 _count = 0;
                 if (data.length > 0) {
