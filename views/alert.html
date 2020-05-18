@@ -30,7 +30,7 @@
             <span class="close_btn" onclick="MarkRead(1);">X
             </span>
 
-            <img src="../content/img/animation.gif"
+            <img id="imgcelebration_container" src="#"
                 class="Imgresolution">
         </div>
     </div>
@@ -46,7 +46,7 @@
                 <li><span>Asmit 2 (BP00113)</span></li>
                 <li><span>Asmit 4 (BP00115)</span></li> -->
             </ul>
-            <img src="../content/img/box31.gif" id="gifImg" class="animation_img">
+            <img src="#" id="gifImg" class="animation_img">
 
             <span class="bottom_heading">Didn't win? Try again, good luck! &#128522;</span>
             <a href="#" class="close-btnn" onclick="MarkRead(2)">x</a>
@@ -188,6 +188,7 @@
                             $('#lblCustName').html(data[x].cname);
 
 
+                            $("#imgcelebration_container").attr("src", "../content/img/animation.gif");
                             $("#celebration_container").show();
                             $("#lucky_draw").hide();
                             $("#box_animation_bell").hide();
