@@ -155,7 +155,7 @@
                         setTimeout(function () {
                             $('#ulData').html(_data);
                             if (data.ctype == 1) {
-                                $('#spText').html("Congratulations winners for yesterday!");
+                                $('#spText').html("Congratulations winners for "+ data.Lucky[0].ContestDate);
                             }
                             else if (data.ctype == 2) {
                                 $('#spText').html("Congratulations winners for last week!");
