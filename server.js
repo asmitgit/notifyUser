@@ -291,7 +291,7 @@ router.route('/StartLuckydraw')
                     .execute("mtx.UpdateContestDetails").then(function (recordSet) {
                         ////console.log(recordSet.recordset);
                         _agent = recordSet.recordset;
-                        if (_agent.length > 0 && _agent.length > req.body.size) {
+                        if (_agent.length > 0 && _agent.length >= req.body.size) {
                             dbConn.close();
 
                             var size, lowest, highest;
