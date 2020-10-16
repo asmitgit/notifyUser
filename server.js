@@ -291,7 +291,37 @@ router.route('/StartLuckydraw')
                     .execute("mtx.UpdateContestDetails").then(function (recordSet) {
                         ////console.log(recordSet.recordset);
                         _agent = recordSet.recordset;
-                        if (_agent.length > 0 && _agent.length >= req.body.size) {
+                        if (_agent.length > 0 && _agent.length == req.body.size) {
+                            var _result = [];
+                            var xmldata = '<xml>';//<agent Sno="" EmpID="" /> </xml>;
+                            for (var m = 0; m < _agent.length; m++) {
+                            
+                                _result.push(_agent[m]);
+                                xmldata = xmldata + '<agent Sno="' + _agent[m].Sno + '" EmpID="' + _agent[m].EmpID + '" />'
+                            }
+                          
+                            
+                            xmldata = xmldata + '</xml>';
+
+                            var dbConnUpdate = new sql.ConnectionPool(msconfig);
+                            dbConnUpdate.connect().then(function () {
+
+                                var requestUpdate = new sql.Request(dbConnUpdate);
+                                requestUpdate.input('ProductID', sql.Int, req.body.pid)
+                                    .input('Type', sql.Int, 2)
+                                    .input('ContestType', sql.Int, req.body.ctype)
+                                    .input('xml', sql.Xml, xmldata)
+                                    .execute("mtx.UpdateContestDetails").then(function (recordSet) {
+                                    });
+
+                            });
+                            var _emitRes = { "Lucky": _result, "AllUser": _agent, "ctype": req.body.ctype, "pid": req.body.pid };
+                            client.emit('luckynumber', _emitRes);
+
+                            fnKeepLog(_service, _body, _method, _result, true, { msg: "no error" });
+                            res.json({ message: 'true', data: _result });
+                        }
+                        else if (_agent.length > 0 && _agent.length > req.body.size) {
                             dbConn.close();
 
                             var size, lowest, highest;
